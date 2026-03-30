@@ -192,6 +192,7 @@ async def register(
         )
         db.add(attendee)
         db.commit()
+        db.close()
 
         generate_qr(attendee_id)
 
