@@ -34,10 +34,10 @@ CONFERENCE = {
 }
 
 # ── Config from environment ──────────────────────────────────────────────────
-ADMIN_PIN      = os.getenv("ADMIN_PIN", "admin1738")
-GMAIL_USER     = os.getenv("GMAIL_USER", "nsigolouis230@gmail.com")
-GMAIL_PASSWORD = os.getenv("GMAIL_APP_PASSWORD", "phnv aaus vhab bnrs")
-BASE_URL       = os.getenv("BASE_URL", "http://localhost:8000")
+ADMIN_PIN      = os.getenv("ADMIN_PIN")
+GMAIL_USER     = os.getenv("GMAIL_USER")
+GMAIL_PASSWORD = os.getenv("GMAIL_APP_PASSWORD")
+BASE_URL       = os.getenv("BASE_URL")
 SESSION_TOKEN  = "admin_session"
 VALID_TOKEN    = "harvest-admin-authenticated"
 
