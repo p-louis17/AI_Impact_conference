@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>You're registered! — {{ conf.name }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #2D1B8E;
+      --teal: #00BCD4;
+      --teal-dark: #0097a7;
+      --white: #ffffff;
+      --gray-50: #f9fafb;
+      --gray-500: #6b7280;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--gray-50);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 20px 60px -10px rgba(45,27,142,0.12);
+      padding: 2.5rem 2rem;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .success-icon {
+      width: 64px; height: 64px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 1.75rem;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--purple);
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--gray-500);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    /* QR Code */
+    .qr-wrap {
+      background: var(--gray-50);
+      border: 2px dashed #e5e7eb;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .qr-wrap img {
+      width: 180px; height: 180px;
+      border-radius: 8px;
+    }
+
+    .qr-id {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--purple);
+      letter-spacing: 0.15em;
+      margin-top: 0.75rem;
+    }
+
+    .qr-hint {
+      font-size: 0.78rem;
+      color: var(--gray-500);
+      margin-top: 0.3rem;
+    }
+
+    /* Days */
+    .days-registered {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .day-chip {
+      background: rgba(45,27,142,0.07);
+      border: 1.5px solid rgba(45,27,142,0.15);
+      border-radius: 10px;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--purple);
+    }
+
+    /* Info */
+    .info-box {
+      background: rgba(0,188,212,0.06);
+      border: 1.5px solid rgba(0,188,212,0.2);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: left;
+      margin-bottom: 1.5rem;
+    }
+
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.85rem;
+      color: var(--gray-500);
+      padding: 0.3rem 0;
+    }
+
+    .info-row .label { font-weight: 600; color: #374151; min-width: 60px; }
+
+    .btn-back {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: var(--purple);
+      color: white;
+      border-radius: 12px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-back:hover { background: #3d2aaa; }
+
+    .screenshot-hint {
+      font-size: 0.78rem;
+      color: var(--gray-500);
+      margin-top: 1.25rem;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="success-icon">✓</div>
+  <h1>You're registered!</h1>
+  <p class="subtitle">Welcome, <strong>{{ attendee.name }}</strong>. See you at the conference.</p>
+
+  <div class="qr-wrap">
+    <img src="{{ qr_url }}" alt="Your QR Code" />
+    <div class="qr-id">{{ attendee.id }}</div>
+    <div class="qr-hint">Show this QR code at the door on each day</div>
+  </div>
+
+  <div class="days-registered">
+    {% if attendee.day1 %}
+    <div class="day-chip">📅 April 8 — Day 1</div>
+    {% endif %}
+    {% if attendee.day2 %}
+    <div class="day-chip">📅 April 9 — Day 2</div>
+    {% endif %}
+  </div>
+
+  <div class="info-box">
+    <div class="info-row">
+      <span class="label">📍 Venue</span>
+      <span>{{ conf.venue }}</span>
+    </div>
+    <div class="info-row">
+      <span class="label">🕗 Time</span>
+      <span>{{ conf.time }} each day</span>
+    </div>
+    <div class="info-row">
+      <span class="label">✉ Email</span>
+      <span>{{ attendee.email }}</span>
+    </div>
+  </div>
+
+  <a href="/" class="btn-back">Register Another Person</a>
+  <p class="screenshot-hint">📸 Screenshot your QR code to keep it handy</p>
+</div>
+</body>
+</html>

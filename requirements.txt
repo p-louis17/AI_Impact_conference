@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+qrcode[pil]
+jinja2
+python-multipart
+aiofiles
+python-decouple==3.8
+psycopg2-binary== 2.9.11

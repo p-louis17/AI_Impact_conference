@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register — {{ conf.name }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #2D1B8E;
+      --purple-light: #3d2aaa;
+      --teal: #00BCD4;
+      --teal-dark: #0097a7;
+      --white: #ffffff;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-300: #d1d5db;
+      --gray-500: #6b7280;
+      --gray-700: #374151;
+      --error: #ef4444;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--gray-50);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Hero Banner */
+    .hero {
+      background: linear-gradient(135deg, var(--purple) 0%, #1a0f5c 60%, #0d0730 100%);
+      color: white;
+      padding: 3rem 1.5rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(0,188,212,0.08);
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -40px;
+      width: 250px; height: 250px;
+      border-radius: 50%;
+      background: rgba(0,188,212,0.05);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(0,188,212,0.2);
+      border: 1px solid rgba(0,188,212,0.4);
+      color: var(--teal);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.35rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-org {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 0.75rem;
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 0.25rem;
+    }
+
+    .hero h1 span { color: var(--teal); }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 1.75rem;
+    }
+
+    .hero-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 0.45rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .hero-tag .icon { font-size: 1rem; }
+
+    /* Card */
+    .card-wrap {
+      max-width: 520px;
+      margin: -2rem auto 3rem;
+      padding: 0 1.25rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 20px 60px -10px rgba(45,27,142,0.12);
+      padding: 2.25rem 2rem;
+    }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--purple);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Error */
+    .error-box {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      color: var(--error);
+      font-size: 0.875rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Form */
+    .field { margin-bottom: 1.1rem; }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      margin-bottom: 0.4rem;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid var(--gray-300);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--gray-700);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(45,27,142,0.08);
+    }
+
+    /* Day selection */
+    .days-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      margin-bottom: 0.6rem;
+    }
+
+    .day-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .day-option input { display: none; }
+
+    .day-card {
+      border: 2px solid var(--gray-200, #e5e7eb);
+      border-radius: 12px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: block;
+    }
+
+    .day-card:hover { border-color: var(--teal); }
+
+    .day-option input:checked + .day-card {
+      border-color: var(--teal);
+      background: rgba(0,188,212,0.05);
+    }
+
+    .day-card .day-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--purple);
+      line-height: 1;
+    }
+
+    .day-card .day-name {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--teal-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0.2rem 0 0.4rem;
+    }
+
+    .day-card .day-date {
+      font-size: 0.8rem;
+      color: var(--gray-500);
+    }
+
+    .day-card .check-indicator {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--gray-300);
+      margin-top: 0.6rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .day-option input:checked + .day-card .check-indicator {
+      background: var(--teal);
+      border-color: var(--teal);
+    }
+
+    .day-option input:checked + .day-card .check-indicator::after {
+      content: '✓';
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    /* Submit */
+    .btn {
+      width: 100%;
+      padding: 0.9rem;
+      background: var(--purple);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.02em;
+    }
+
+    .btn:hover { background: var(--purple-light); }
+    .btn:active { transform: scale(0.99); }
+
+    .free-tag {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--gray-500);
+    }
+
+    .free-tag strong { color: var(--teal-dark); }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.78rem;
+      color: var(--gray-500);
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">Free Event · Open to All</div>
+  <div class="hero-org">{{ conf.organizer }}</div>
+  <h1>AI <span>Impact</span><br>Conference 2026</h1>
+  <div class="hero-meta">
+    <div class="hero-tag"><span class="icon">📅</span> Apr 8–9, 2026</div>
+    <div class="hero-tag"><span class="icon">🕗</span> {{ conf.time }}</div>
+    <div class="hero-tag"><span class="icon">📍</span> {{ conf.venue }}</div>
+  </div>
+</div>
+
+<div class="card-wrap">
+  <div class="card">
+    <div class="card-title">Reserve your spot</div>
+
+    {% if error %}
+    <div class="error-box">⚠ {{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/register">
+      <div class="field">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="e.g. John Mukasa" required />
+      </div>
+
+      <div class="field">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required />
+      </div>
+
+      <div class="field">
+        <div class="days-label">Which day(s) are you attending?</div>
+        <div class="day-options">
+          <label class="day-option">
+            <input type="checkbox" name="days" value="day1" />
+            <span class="day-card">
+              <div class="day-num">8</div>
+              <div class="day-name">Wednesday</div>
+              <div class="day-date">April 8, 2026</div>
+              <div class="check-indicator"></div>
+            </span>
+          </label>
+          <label class="day-option">
+            <input type="checkbox" name="days" value="day2" />
+            <span class="day-card">
+              <div class="day-num">9</div>
+              <div class="day-name">Thursday</div>
+              <div class="day-date">April 9, 2026</div>
+              <div class="check-indicator"></div>
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn">Register Now →</button>
+      <div class="free-tag">🎉 <strong>Free entry</strong> · You'll receive a QR code by email</div>
+    </form>
+  </div>
+</div>
+
+<footer>© 2026 Harvest Institute · AI Impact Conference</footer>
+
+<script>
+  // Require at least one day selected
+  document.querySelector('form').addEventListener('submit', function(e) {
+    const checked = document.querySelectorAll('input[name="days"]:checked');
+    if (checked.length === 0) {
+      e.preventDefault();
+      alert('Please select at least one day to attend.');
+    }
+  });
+</script>
+</body>
+</html>

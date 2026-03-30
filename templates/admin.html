@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — {{ conf.name }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple: #2D1B8E; --purple-light: #3d2aaa;
+      --teal: #00BCD4; --teal-dark: #0097a7;
+      --gray-50: #f9fafb; --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb; --gray-500: #6b7280; --gray-700: #374151;
+      --green: #10b981; --green-light: #ecfdf5;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--gray-50); min-height: 100vh; }
+
+    .topbar {
+      background: var(--purple); color: white;
+      padding: 1rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;
+    }
+    .topbar-left h1 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; }
+    .topbar-left p { font-size: 0.78rem; opacity: 0.6; margin-top: 0.1rem; }
+    .topbar-right { display: flex; align-items: center; gap: 0.75rem; }
+    .topbar-badge {
+      background: rgba(0,188,212,0.2); border: 1px solid rgba(0,188,212,0.4);
+      color: var(--teal); font-size: 0.75rem; font-weight: 700;
+      padding: 0.3rem 0.85rem; border-radius: 100px; letter-spacing: 0.05em;
+    }
+    .logout-btn {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      color: white; font-size: 0.78rem; font-weight: 600;
+      padding: 0.3rem 0.85rem; border-radius: 100px; cursor: pointer;
+      text-decoration: none; transition: background 0.2s;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,0.2); }
+
+    .content { max-width: 900px; margin: 0 auto; padding: 1.5rem 1.25rem; }
+
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-card { background: white; border-radius: 14px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06); text-align: center; }
+    .stat-num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--purple); }
+    .stat-label { font-size: 0.78rem; color: var(--gray-500); margin-top: 0.2rem; }
+    .progress-wrap { margin-top: 0.75rem; }
+    .progress-bar { height: 6px; background: var(--gray-200); border-radius: 100px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--teal-dark)); border-radius: 100px; transition: width 0.5s ease; }
+    .progress-label { font-size: 0.72rem; color: var(--gray-500); margin-top: 0.3rem; text-align: right; }
+
+    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
+    .tab {
+      padding: 0.6rem 1.25rem; border-radius: 10px;
+      font-family: 'Syne', sans-serif; font-size: 0.875rem; font-weight: 700;
+      text-decoration: none; border: 2px solid var(--gray-200); color: var(--gray-500); background: white; transition: all 0.2s;
+    }
+    .tab.active { background: var(--purple); color: white; border-color: var(--purple); }
+
+    /* Scan box */
+    .scan-box {
+      background: white; border-radius: 14px; padding: 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 1.25rem;
+    }
+    .scan-row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+    .scan-row label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gray-500); white-space: nowrap; }
+    .scan-inputs { display: flex; gap: 0.5rem; flex: 1; flex-wrap: wrap; }
+    .scan-inputs input {
+      flex: 1; min-width: 130px; padding: 0.6rem 1rem;
+      border: 1.5px solid var(--gray-200); border-radius: 8px;
+      font-size: 0.9rem; outline: none; font-family: 'DM Sans', sans-serif;
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .scan-inputs input:focus { border-color: var(--purple); }
+    .scan-btn {
+      padding: 0.6rem 1.1rem; background: var(--teal); color: white;
+      border: none; border-radius: 8px; font-family: 'Syne', sans-serif;
+      font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: background 0.2s; white-space: nowrap;
+    }
+    .scan-btn:hover { background: var(--teal-dark); }
+    .camera-btn {
+      padding: 0.6rem 1.1rem; background: var(--purple); color: white;
+      border: none; border-radius: 8px; font-family: 'Syne', sans-serif;
+      font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: background 0.2s; white-space: nowrap;
+    }
+    .camera-btn:hover { background: var(--purple-light); }
+
+    #scan-result {
+      margin-top: 0.75rem; padding: 0.6rem 1rem; border-radius: 8px;
+      font-size: 0.875rem; font-weight: 500; display: none;
+    }
+    #scan-result.success { background: var(--green-light); color: var(--green); display: block; }
+    #scan-result.error { background: #fef2f2; color: #ef4444; display: block; }
+
+    /* Camera */
+    #camera-container { margin-top: 1rem; }
+    .camera-wrap { position: relative; max-width: 320px; margin: 0 auto; }
+    #camera-video { width: 100%; border-radius: 12px; background: #000; display: block; }
+    .camera-overlay {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;
+    }
+    .camera-target {
+      width: 200px; height: 200px; border: 3px solid var(--teal); border-radius: 12px;
+      box-shadow: 0 0 0 9999px rgba(0,0,0,0.4);
+    }
+    .camera-hint { text-align: center; font-size: 0.8rem; color: var(--gray-500); margin-top: 0.6rem; }
+    .camera-close {
+      display: block; margin: 0.6rem auto 0; padding: 0.45rem 1.25rem;
+      border: 1.5px solid var(--gray-200); border-radius: 8px; background: white;
+      font-size: 0.82rem; cursor: pointer; color: var(--gray-500);
+    }
+
+    .search-input {
+      width: 100%; padding: 0.7rem 1rem; border: 1.5px solid var(--gray-200);
+      border-radius: 10px; font-size: 0.9rem; outline: none; margin-bottom: 1rem;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .search-input:focus { border-color: var(--purple); }
+
+    .table-wrap { background: white; border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: var(--gray-50); border-bottom: 1px solid var(--gray-200); }
+    th { text-align: left; padding: 0.85rem 1rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-500); }
+    td { padding: 0.9rem 1rem; font-size: 0.875rem; color: var(--gray-700); border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--gray-50); }
+
+    .attendee-name { font-weight: 600; color: #111827; }
+    .attendee-id { font-family: monospace; font-size: 0.8rem; background: var(--gray-100); padding: 0.15rem 0.5rem; border-radius: 4px; color: var(--purple); }
+
+    .badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.25rem 0.7rem; border-radius: 100px; font-size: 0.75rem; font-weight: 600; }
+    .badge-in { background: var(--green-light); color: var(--green); }
+    .badge-out { background: var(--gray-100); color: var(--gray-500); }
+
+    .btn-checkin { padding: 0.4rem 0.9rem; border: none; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-checkin-in { background: var(--green); color: white; }
+    .btn-checkin-out { background: var(--gray-200); color: var(--gray-700); }
+    .btn-checkin:hover { opacity: 0.85; }
+
+    .empty { text-align: center; padding: 3rem; color: var(--gray-500); font-size: 0.9rem; }
+
+    @media (max-width: 600px) {
+      .stats { grid-template-columns: 1fr 1fr; }
+      th:nth-child(3), td:nth-child(3) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <h1>Admin Dashboard</h1>
+    <p>{{ conf.name }}</p>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-badge">ADMIN</div>
+    <a href="/admin/logout" class="logout-btn">Log Out</a>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-num">{{ total }}</div>
+      <div class="stat-label">Registered for {{ "Day 1" if active_day == "day1" else "Day 2" }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">{{ checked_in }}</div>
+      <div class="stat-label">Checked In</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">{{ total - checked_in }}</div>
+      <div class="stat-label">Pending</div>
+      {% if total > 0 %}
+      <div class="progress-wrap">
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: {{ (checked_in / total * 100)|int }}%"></div>
+        </div>
+        <div class="progress-label">{{ (checked_in / total * 100)|int }}%</div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="tabs">
+    <a href="/admin?day=day1" class="tab {{ 'active' if active_day == 'day1' }}">📅 Day 1 — Apr 8</a>
+    <a href="/admin?day=day2" class="tab {{ 'active' if active_day == 'day2' }}">📅 Day 2 — Apr 9</a>
+  </div>
+
+  <!-- Scan box -->
+  <div class="scan-box">
+    <div class="scan-row">
+      <label>Check-In:</label>
+      <div class="scan-inputs">
+        <input type="text" id="scan-id" placeholder="Type attendee ID..." maxlength="8" />
+        <button class="scan-btn" onclick="doScan()">Check In ↵</button>
+        <button class="camera-btn" onclick="toggleCamera()">📷 Scan QR</button>
+      </div>
+    </div>
+
+    <div id="scan-result"></div>
+
+    <div id="camera-container" style="display:none;">
+      <div class="camera-wrap">
+        <video id="camera-video" playsinline autoplay muted></video>
+        <canvas id="camera-canvas" style="display:none;"></canvas>
+        <div class="camera-overlay"><div class="camera-target"></div></div>
+      </div>
+      <p class="camera-hint">Point at attendee's QR code — auto-detects</p>
+      <button class="camera-close" onclick="stopCamera()">✕ Close Camera</button>
+    </div>
+  </div>
+
+  <input type="text" class="search-input" placeholder="🔍 Search by name or email..." id="search" oninput="filterTable()" />
+
+  <div class="table-wrap">
+    {% if attendees %}
+    <table id="attendee-table">
+      <thead>
+        <tr>
+          <th>Attendee</th>
+          <th>Email</th>
+          <th>ID</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in attendees %}
+        {% set checked = a.checked_in_day1 if active_day == 'day1' else a.checked_in_day2 %}
+        <tr>
+          <td class="attendee-name">{{ a.name }}</td>
+          <td>{{ a.email }}</td>
+          <td><span class="attendee-id">{{ a.id }}</span></td>
+          <td>
+            {% if checked %}
+            <span class="badge badge-in">✓ Checked In</span>
+            {% else %}
+            <span class="badge badge-out">Pending</span>
+            {% endif %}
+          </td>
+          <td>
+            <form method="POST" action="/admin/checkin/{{ a.id }}?day={{ active_day }}">
+              <button type="submit" class="btn-checkin {{ 'btn-checkin-out' if checked else 'btn-checkin-in' }}">
+                {{ "Undo" if checked else "Check In" }}
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">No attendees registered for this day yet.</div>
+    {% endif %}
+  </div>
+
+</div>
+
+<!-- jsQR for camera scanning -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.min.js"></script>
+<script>
+  const ACTIVE_DAY = '{{ active_day }}';
+  let cameraStream = null;
+  let scanLoop = null;
+
+  // ── Manual ID check-in ──
+  function filterTable() {
+    const q = document.getElementById('search').value.toLowerCase();
+    document.querySelectorAll('#attendee-table tbody tr').forEach(row => {
+      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  }
+
+  async function doScan(idOverride) {
+    const id = idOverride || document.getElementById('scan-id').value.trim();
+    const result = document.getElementById('scan-result');
+    if (!id) return;
+
+    const formData = new FormData();
+    formData.append('attendee_id', id);
+    formData.append('day', ACTIVE_DAY);
+
+    const res = await fetch('/admin/scan', { method: 'POST', body: formData });
+    const data = await res.json();
+
+    result.textContent = data.message;
+    result.className = data.success ? 'success' : 'error';
+
+    if (data.success) {
+      document.getElementById('scan-id').value = '';
+      stopCamera();
+      setTimeout(() => location.reload(), 1400);
+    }
+  }
+
+  document.getElementById('scan-id').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doScan();
+  });
+
+  // ── Camera QR scanner ──
+  async function toggleCamera() {
+    const container = document.getElementById('camera-container');
+    if (container.style.display === 'none') {
+      await startCamera();
+    } else {
+      stopCamera();
+    }
+  }
+
+  async function startCamera() {
+    const container = document.getElementById('camera-container');
+    const video = document.getElementById('camera-video');
+    try {
+      cameraStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+      });
+      video.srcObject = cameraStream;
+      container.style.display = 'block';
+      requestAnimationFrame(scanFrame);
+    } catch (err) {
+      showResult('Camera access denied or unavailable. Use manual ID entry above.', false);
+    }
+  }
+
+  function stopCamera() {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(t => t.stop());
+      cameraStream = null;
+    }
+    if (scanLoop) { cancelAnimationFrame(scanLoop); scanLoop = null; }
+    document.getElementById('camera-container').style.display = 'none';
+    document.getElementById('camera-video').srcObject = null;
+  }
+
+  let lastScanned = null;
+  let lastScannedTime = 0;
+
+  function scanFrame() {
+    const video = document.getElementById('camera-video');
+    const canvas = document.getElementById('camera-canvas');
+
+    if (!cameraStream) return;
+
+    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: 'dontInvert'
+      });
+
+      if (code) {
+        const now = Date.now();
+        // Debounce — don't re-scan same code within 3 seconds
+        if (code.data !== lastScanned || now - lastScannedTime > 3000) {
+          lastScanned = code.data;
+          lastScannedTime = now;
+          doScan(code.data.toUpperCase());
+        }
+      }
+    }
+
+    scanLoop = requestAnimationFrame(scanFrame);
+  }
+
+  function showResult(message, success) {
+    const result = document.getElementById('scan-result');
+    result.textContent = message;
+    result.className = success ? 'success' : 'error';
+  }
+</script>
+</body>
+</html>

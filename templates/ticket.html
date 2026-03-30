@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Ticket — {{ conf.name }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple: #2D1B8E;
+      --teal: #00BCD4;
+      --teal-dark: #0097a7;
+      --gray-50: #f9fafb;
+      --gray-500: #6b7280;
+    }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--gray-50);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem;
+    }
+
+    .ticket {
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 20px 60px -10px rgba(45,27,142,0.12);
+      max-width: 420px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    /* Ticket header */
+    .ticket-header {
+      background: linear-gradient(135deg, var(--purple) 0%, #1a0f5c 100%);
+      padding: 1.75rem 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .ticket-header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 20px;
+      background: white;
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+
+    .org {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 0.4rem;
+    }
+
+    .conf-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: white;
+    }
+
+    .conf-title span { color: var(--teal); }
+
+    /* Ticket body */
+    .ticket-body { padding: 1.75rem 1.5rem; }
+
+    .attendee-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--purple);
+      text-align: center;
+      margin-bottom: 0.25rem;
+    }
+
+    .attendee-email {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--gray-500);
+      margin-bottom: 1.5rem;
+    }
+
+    /* QR code */
+    .qr-section {
+      text-align: center;
+      padding: 1.25rem;
+      background: var(--gray-50);
+      border-radius: 16px;
+      margin-bottom: 1.25rem;
+      border: 2px dashed #e5e7eb;
+    }
+
+    .qr-section img { width: 190px; height: 190px; border-radius: 8px; }
+
+    .qr-id {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--purple);
+      letter-spacing: 0.2em;
+      margin-top: 0.75rem;
+    }
+
+    .qr-hint { font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem; }
+
+    /* Days */
+    .days {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .day-chip {
+      background: rgba(45,27,142,0.07);
+      border: 1.5px solid rgba(45,27,142,0.15);
+      border-radius: 10px;
+      padding: 0.5rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--purple);
+    }
+
+    /* Info */
+    .info {
+      background: rgba(0,188,212,0.05);
+      border: 1.5px solid rgba(0,188,212,0.18);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .info-row {
+      display: flex;
+      gap: 0.6rem;
+      font-size: 0.83rem;
+      color: var(--gray-500);
+      padding: 0.25rem 0;
+    }
+
+    .info-row strong { color: #374151; }
+
+    /* Ticket perforation line */
+    .perforation {
+      display: flex;
+      align-items: center;
+      margin: 0 -1.5rem;
+      padding: 0.75rem 0;
+    }
+
+    .perf-circle {
+      width: 20px; height: 20px;
+      background: var(--gray-50);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .perf-line {
+      flex: 1;
+      border-top: 2px dashed #e5e7eb;
+    }
+
+    .screenshot-hint {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      padding: 1rem 1.5rem 1.25rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="ticket">
+  <div class="ticket-header">
+    <div class="org">{{ conf.organizer }}</div>
+    <div class="conf-title">AI <span>Impact</span> Conference 2026</div>
+  </div>
+
+  <div class="ticket-body">
+    <div class="attendee-name">{{ attendee.name }}</div>
+    <div class="attendee-email">{{ attendee.email }}</div>
+
+    <div class="qr-section">
+      <img src="{{ qr_url }}" alt="QR Code" />
+      <div class="qr-id">{{ attendee.id }}</div>
+      <div class="qr-hint">Show at the door each day</div>
+    </div>
+
+    <div class="days">
+      {% if attendee.day1 %}
+      <div class="day-chip">📅 Day 1 — April 8</div>
+      {% endif %}
+      {% if attendee.day2 %}
+      <div class="day-chip">📅 Day 2 — April 9</div>
+      {% endif %}
+    </div>
+
+    <div class="info">
+      <div class="info-row"><strong>📍</strong> {{ conf.venue }}</div>
+      <div class="info-row"><strong>🕗</strong> {{ conf.time }} each day</div>
+    </div>
+  </div>
+
+  <div class="perforation">
+    <div class="perf-circle"></div>
+    <div class="perf-line"></div>
+    <div class="perf-circle"></div>
+  </div>
+
+  <p class="screenshot-hint">📸 Bookmark this page or screenshot your QR code</p>
+</div>
+
+</body>
+</html>
