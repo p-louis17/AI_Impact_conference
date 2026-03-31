@@ -1,5 +1,5 @@
 .env.example
 .env
-conceference.db
-__pychache__
-venv
+conference.db
+__pycache__/
+venv/
