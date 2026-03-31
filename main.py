@@ -8,11 +8,12 @@ from models import Attendee
 import qrcode
 import os
 import uuid
-import smtplib
+import aiosmtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
-import threading
+from dotenv import load_dotenv
+load_dotenv()
 
 Base.metadata.create_all(bind=engine)
 
@@ -34,12 +35,13 @@ CONFERENCE = {
 }
 
 # ── Config from environment ──────────────────────────────────────────────────
-ADMIN_PIN      = os.getenv("ADMIN_PIN")
-GMAIL_USER     = os.getenv("GMAIL_USER")
-GMAIL_PASSWORD = os.getenv("GMAIL_APP_PASSWORD")
-BASE_URL       = os.getenv("BASE_URL")
+ADMIN_PIN      = os.getenv("ADMIN_PIN", "")
+GMAIL_USER     = os.getenv("GMAIL_USER", "")
+GMAIL_PASSWORD = os.getenv("GMAIL_APP_PASSWORD", "")
+BASE_URL       = os.getenv("BASE_URL", "")
 SESSION_TOKEN  = "admin_session"
 VALID_TOKEN    = "harvest-admin-authenticated"
+# print(f"DEBUG EMAIL CONFIG — user='{GMAIL_USER}' pass_set={bool(GMAIL_PASSWORD)}")
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
@@ -58,8 +60,8 @@ def is_admin_authenticated(admin_session: str = None) -> bool:
     return admin_session == VALID_TOKEN
 
 
-def send_confirmation_email(attendee_name: str, attendee_email: str,
-                             attendee_id: str, day1: bool, day2: bool):
+async def send_confirmation_email(attendee_name: str, attendee_email: str,
+                                   attendee_id: str, day1: bool, day2: bool):
     if not GMAIL_USER or not GMAIL_PASSWORD:
         print("⚠ Email not configured — skipping email send")
         return
@@ -113,10 +115,15 @@ def send_confirmation_email(attendee_name: str, attendee_email: str,
                 img_data.add_header("Content-Disposition", "inline")
                 msg.attach(img_data)
 
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-            server.login(GMAIL_USER, GMAIL_PASSWORD)
-            server.sendmail(GMAIL_USER, attendee_email, msg.as_string())
-            print(f"✉ Email sent to {attendee_email}")
+        await aiosmtplib.send(
+            msg,
+            hostname="smtp.gmail.com",
+            port=587,
+            username=GMAIL_USER,
+            password=GMAIL_PASSWORD,
+            start_tls=True,
+        )
+        print(f"✉ Email sent to {attendee_email}")
 
     except Exception as e:
         print(f"✗ Email failed for {attendee_email}: {e}")
@@ -192,17 +199,12 @@ async def register(
         )
         db.add(attendee)
         db.commit()
-        db.close()
 
         generate_qr(attendee_id)
 
-        # Send email in background so registration feels instant
-        thread = threading.Thread(
-            target=send_confirmation_email,
-            args=(name, email, attendee_id, day1, day2)
-        )
-        thread.daemon = True
-        thread.start()
+        # Fire-and-forget async email — non-blocking
+        import asyncio
+        asyncio.create_task(send_confirmation_email(name, email, attendee_id, day1, day2))
 
         return RedirectResponse(f"/success/{attendee_id}", status_code=303)
     finally:

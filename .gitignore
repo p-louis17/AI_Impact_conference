@@ -1,3 +1,5 @@
 .env.example
 .env
 conceference.db
+__pychache__
+venv
