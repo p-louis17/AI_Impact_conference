@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-from fastapi import FastAPI, Request, Form, HTTPException, Cookie, UploadFile, File
+from fastapi import FastAPI, Request, Form, HTTPException, Cookie, UploadFile, File, BackgroundTasks
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
@@ -322,8 +322,10 @@ async def manual_checkin(
 
 @app.post("/admin/upload-csv")
 async def upload_csv(
+    request: Request,
     file: UploadFile = File(...),
-    admin_session: str = Cookie(default=None)
+    admin_session: str = Cookie(default=None),
+    background_tasks: BackgroundTasks = None
 ):
     if not is_admin(admin_session):
         return JSONResponse({"success": False, "message": "Unauthorized"}, status_code=401)
@@ -361,7 +363,6 @@ async def upload_csv(
 
         added = 0
         skipped = 0
-        import asyncio
 
         for row in raw_rows:
             norm = {k.lower().strip(): v for k, v in row.items()}
@@ -375,7 +376,7 @@ async def upload_csv(
 
             attendee = create_attendee_from_row(name, email, phone)
             if attendee:
-                asyncio.create_task(send_ticket_email(attendee.name, attendee.email, attendee.id))
+                await send_ticket_email(attendee.name, attendee.email, attendee.id)
                 added += 1
             else:
                 skipped += 1
@@ -418,7 +419,8 @@ if __name__ == "__main__":
 @app.post("/admin/resend-ticket")
 async def resend_ticket_endpoint(
     attendee_id: str = Form(...),
-    admin_session: str = Cookie(default=None)
+    admin_session: str = Cookie(default=None),
+    background_tasks: BackgroundTasks = None
 ):
     if not is_admin(admin_session):
         return JSONResponse({"success": False, "message": "Unauthorized"}, status_code=401)
@@ -427,8 +429,7 @@ async def resend_ticket_endpoint(
         a = db.query(Attendee).filter(Attendee.id == attendee_id).first()
         if not a:
             return {"success": False, "message": "Attendee not found"}
-        import asyncio
-        asyncio.create_task(send_ticket_email(a.name, a.email, a.id))
+        background_tasks.add_task(send_ticket_email, a.name, a.email, a.id)
         return {"success": True, "message": f"Ticket resent to {a.email}"}
     finally:
         db.close()
