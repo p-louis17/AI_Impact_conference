@@ -5,7 +5,11 @@ qrcode[pil]
 jinja2
 python-multipart
 aiofiles
-python-decouple==3.8
-psycopg2-binary== 2.9.11
-python-multipart
-aiosmtplib
+resend
+python-dotenv
+psycopg2-binary
+pytz
+python-decouple
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client

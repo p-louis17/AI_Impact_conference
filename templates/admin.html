@@ -1,415 +1,328 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin — {{ conf.name }}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-  <!-- html5-qrcode: battle-tested, works on iOS Safari + Android Chrome on HTTPS -->
+  <title>Admin — AI Impact Conference 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --purple: #2D1B8E; --purple-light: #3d2aaa;
-      --teal: #00BCD4; --teal-dark: #0097a7;
-      --gray-50: #f9fafb; --gray-100: #f3f4f6;
-      --gray-200: #e5e7eb; --gray-500: #6b7280; --gray-700: #374151;
-      --green: #10b981; --green-light: #ecfdf5;
-      --red: #ef4444; --red-light: #fef2f2;
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --purple:#2D1B8E;--purple-mid:#3d2aaa;--purple-dark:#1a0f5c;
+      --teal:#00BCD4;--teal-dark:#0097a7;
+      --green:#10b981;--green-bg:#ecfdf5;
+      --red:#ef4444;--red-bg:#fef2f2;
+      --gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;
+      --gray-400:#94a3b8;--gray-600:#475569;--gray-800:#1e293b;
+      --white:#ffffff;
+      --radius:12px;--shadow:0 1px 3px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.04);
     }
-    body { font-family: 'DM Sans', sans-serif; background: var(--gray-50); min-height: 100vh; }
-
-    .topbar {
-      background: var(--purple); color: white;
-      padding: 1rem 1.5rem;
-      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;
+    body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--gray-800);min-height:100vh;}
+    .topbar{background:var(--purple);color:white;padding:0.875rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:sticky;top:0;z-index:100;}
+    .topbar-brand{display:flex;align-items:center;gap:0.75rem;}
+    .topbar-dot{width:8px;height:8px;background:var(--teal);border-radius:50%;flex-shrink:0;}
+    .topbar-title{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;}
+    .topbar-sub{font-size:0.72rem;opacity:0.55;margin-top:0.1rem;}
+    .topbar-right{display:flex;align-items:center;gap:0.625rem;flex-wrap:wrap;}
+    .chip{display:inline-flex;align-items:center;padding:0.3rem 0.75rem;border-radius:100px;font-size:0.72rem;font-weight:700;letter-spacing:0.05em;}
+    .chip-teal{background:rgba(0,188,212,0.18);color:var(--teal);border:1px solid rgba(0,188,212,0.3);}
+    .chip-warn{background:rgba(251,191,36,0.2);color:#d97706;border:1px solid rgba(251,191,36,0.4);}
+    .chip-dim{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);border:1px solid rgba(255,255,255,0.12);}
+    .btn-logout{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);color:white;padding:0.3rem 0.875rem;border-radius:100px;font-size:0.72rem;font-weight:600;cursor:pointer;text-decoration:none;}
+    .page{max-width:960px;margin:0 auto;padding:1.5rem 1rem;}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0.875rem;margin-bottom:1.5rem;}
+    .stat{background:var(--white);border-radius:var(--radius);padding:1.1rem 1.25rem;box-shadow:var(--shadow);border:1px solid var(--gray-200);}
+    .stat-val{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;color:var(--purple);line-height:1;}
+    .stat-label{font-size:0.75rem;color:var(--gray-400);margin-top:0.3rem;font-weight:500;}
+    .stat-bar{height:4px;background:var(--gray-200);border-radius:100px;margin-top:0.6rem;overflow:hidden;}
+    .stat-bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-dark));border-radius:100px;}
+    .card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--gray-200);margin-bottom:1.25rem;overflow:hidden;}
+    .card-header{padding:1rem 1.25rem;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;}
+    .card-title{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:var(--gray-800);}
+    .card-body{padding:1.25rem;}
+    .scan-btn{display:flex;align-items:center;justify-content:center;gap:0.6rem;width:100%;padding:1rem;background:var(--purple);color:white;border:none;font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:background 0.15s;}
+    .scan-btn:hover{background:var(--purple-mid);}
+    .scan-btn.active{background:var(--purple-dark);}
+    #qr-reader-wrap{display:none;padding:1rem 1rem 0;}
+    #qr-reader{border-radius:10px;overflow:hidden;}
+    #qr-reader video{border-radius:8px!important;}
+    #qr-reader__header_message{display:none!important;}
+    #qr-reader__dashboard_section_fsr{display:none!important;}
+    #qr-reader__dashboard_section_csr button{background:var(--teal)!important;color:white!important;border:none!important;border-radius:8px!important;padding:0.5rem 1.25rem!important;font-family:'Syne',sans-serif!important;font-weight:700!important;cursor:pointer!important;}
+    #qr-reader__camera_selection{width:100%!important;border-radius:8px!important;border:1.5px solid var(--gray-200)!important;padding:0.4rem!important;margin-bottom:0.5rem!important;}
+    #scan-toast{margin:0.75rem 1rem;padding:0.875rem 1rem;border-radius:10px;font-size:0.9rem;font-weight:600;text-align:center;display:none;}
+    #scan-toast.ok{background:var(--green-bg);color:var(--green);display:block;}
+    #scan-toast.err{background:var(--red-bg);color:var(--red);display:block;}
+    .manual-wrap{padding:0.875rem 1rem 1rem;border-top:1px solid var(--gray-100);}
+    .manual-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gray-400);margin-bottom:0.4rem;display:block;}
+    .manual-row{display:flex;gap:0.5rem;}
+    .manual-input{flex:1;padding:0.65rem 0.875rem;border:1.5px solid var(--gray-200);border-radius:10px;font-size:0.95rem;font-family:monospace;letter-spacing:0.12em;text-transform:uppercase;outline:none;transition:border-color 0.15s;}
+    .manual-input:focus{border-color:var(--purple);}
+    .manual-btn{padding:0.65rem 1rem;background:var(--teal);color:white;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;white-space:nowrap;}
+    .manual-btn:hover{background:var(--teal-dark);}
+    .upload-zone{border:2px dashed var(--gray-200);border-radius:10px;padding:1.5rem;text-align:center;cursor:pointer;transition:border-color 0.15s,background 0.15s;}
+    .upload-zone:hover,.upload-zone.drag{border-color:var(--teal);background:rgba(0,188,212,0.03);}
+    .upload-zone input{display:none;}
+    .upload-icon{font-size:1.75rem;margin-bottom:0.5rem;}
+    .upload-text{font-size:0.875rem;color:var(--gray-600);font-weight:500;}
+    .upload-sub{font-size:0.75rem;color:var(--gray-400);margin-top:0.25rem;}
+    #upload-result{margin-top:0.75rem;padding:0.75rem;border-radius:8px;font-size:0.85rem;font-weight:500;display:none;}
+    #upload-result.ok{background:var(--green-bg);color:var(--green);display:block;}
+    #upload-result.err{background:var(--red-bg);color:var(--red);display:block;}
+    #upload-result.loading{background:var(--gray-100);color:var(--gray-600);display:block;}
+    .search-wrap{position:relative;width:100%;max-width:280px;}
+    .search-icon{position:absolute;left:0.875rem;top:50%;transform:translateY(-50%);color:var(--gray-400);pointer-events:none;}
+    .search-input{width:100%;padding:0.65rem 0.875rem 0.65rem 2.25rem;border:1.5px solid var(--gray-200);border-radius:10px;font-size:0.875rem;outline:none;font-family:'DM Sans',sans-serif;transition:border-color 0.15s;}
+    .search-input:focus{border-color:var(--purple);}
+    .table-wrap{overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;min-width:500px;}
+    thead{background:var(--gray-50);}
+    th{text-align:left;padding:0.75rem 1rem;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--gray-400);border-bottom:1px solid var(--gray-200);white-space:nowrap;}
+    td{padding:0.8rem 1rem;font-size:0.85rem;border-bottom:1px solid var(--gray-100);vertical-align:middle;}
+    tr:last-child td{border-bottom:none;}
+    tbody tr:hover td{background:var(--gray-50);}
+    .name-cell{font-weight:600;color:var(--gray-800);}
+    .email-cell{color:var(--gray-600);font-size:0.8rem;}
+    .id-badge{font-family:monospace;font-size:0.78rem;background:var(--gray-100);color:var(--purple);padding:0.2rem 0.5rem;border-radius:5px;letter-spacing:0.1em;font-weight:600;}
+    .status-badge{display:inline-flex;align-items:center;gap:0.3rem;padding:0.2rem 0.65rem;border-radius:100px;font-size:0.72rem;font-weight:700;white-space:nowrap;}
+    .badge-in{background:var(--green-bg);color:var(--green);}
+    .badge-out{background:var(--gray-100);color:var(--gray-400);}
+    .badge-unsent{background:#fef3c7;color:#d97706;}
+    .action-btn{padding:0.3rem 0.75rem;border:none;border-radius:7px;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;}
+    .btn-in{background:var(--green);color:white;}
+    .btn-undo{background:var(--gray-200);color:var(--gray-600);}
+    .resend-btn{background:none;border:1px solid var(--gray-200);color:var(--gray-600);padding:0.25rem 0.6rem;border-radius:7px;font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:0.3rem;}
+    .resend-btn:hover{border-color:var(--purple);color:var(--purple);}
+    .empty-state{text-align:center;padding:3rem;color:var(--gray-400);font-size:0.875rem;}
+    @media(max-width:640px){
+      .stats{grid-template-columns:1fr 1fr;}
+      .topbar-sub{display:none;}
+      th:nth-child(3),td:nth-child(3){display:none;}
     }
-    .topbar-left h1 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; }
-    .topbar-left p { font-size: 0.78rem; opacity: 0.6; margin-top: 0.1rem; }
-    .topbar-right { display: flex; align-items: center; gap: 0.75rem; }
-    .topbar-badge { background: rgba(0,188,212,0.2); border: 1px solid rgba(0,188,212,0.4); color: var(--teal); font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.85rem; border-radius: 100px; }
-    .logout-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 0.78rem; font-weight: 600; padding: 0.3rem 0.85rem; border-radius: 100px; cursor: pointer; text-decoration: none; }
-
-    .content { max-width: 900px; margin: 0 auto; padding: 1.5rem 1.25rem; }
-
-    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
-    .stat-card { background: white; border-radius: 14px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06); text-align: center; }
-    .stat-num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--purple); }
-    .stat-label { font-size: 0.78rem; color: var(--gray-500); margin-top: 0.2rem; }
-    .progress-bar { height: 6px; background: var(--gray-200); border-radius: 100px; overflow: hidden; margin-top: 0.75rem; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--teal-dark)); border-radius: 100px; }
-    .progress-label { font-size: 0.72rem; color: var(--gray-500); margin-top: 0.3rem; text-align: right; }
-
-    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
-    .tab { padding: 0.6rem 1.25rem; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 0.875rem; font-weight: 700; text-decoration: none; border: 2px solid var(--gray-200); color: var(--gray-500); background: white; transition: all 0.2s; }
-    .tab.active { background: var(--purple); color: white; border-color: var(--purple); }
-
-    /* ── Scan card ── */
-    .scan-card { background: white; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 1.25rem; overflow: hidden; }
-
-    /* Big scan button */
-    .scan-trigger {
-      display: flex; align-items: center; justify-content: center; gap: 0.75rem;
-      width: 100%; padding: 1.1rem 1.5rem;
-      background: var(--purple); color: white; border: none;
-      font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700;
-      cursor: pointer; transition: background 0.2s;
-    }
-    .scan-trigger:hover { background: var(--purple-light); }
-    .scan-trigger.active { background: #1a0f5c; }
-    .scan-icon { font-size: 1.4rem; }
-
-    /* Camera area */
-    #qr-reader-wrap { display: none; padding: 1rem 1rem 0; }
-    #qr-reader { width: 100%; border-radius: 12px; overflow: hidden; }
-    /* Override html5-qrcode default styles */
-    #qr-reader video { border-radius: 10px !important; }
-    #qr-reader__scan_region { border-radius: 10px; }
-    #qr-reader__header_message { display: none !important; }
-    #qr-reader__dashboard_section_csr button {
-      background: var(--teal) !important; color: white !important;
-      border: none !important; border-radius: 8px !important;
-      padding: 0.5rem 1.25rem !important; font-family: 'Syne', sans-serif !important;
-      font-weight: 700 !important; cursor: pointer !important;
-    }
-    #qr-reader__dashboard_section_fsr { display: none !important; }
-    #qr-reader__camera_selection { width: 100% !important; margin-bottom: 0.5rem !important; border-radius: 8px !important; border: 1.5px solid var(--gray-200) !important; padding: 0.4rem !important; }
-
-    /* Result toast */
-    #scan-result {
-      margin: 0.75rem 1rem; padding: 0.85rem 1rem;
-      border-radius: 10px; font-size: 0.9rem; font-weight: 600;
-      display: none; text-align: center;
-    }
-    #scan-result.success { background: var(--green-light); color: var(--green); display: block; }
-    #scan-result.error   { background: var(--red-light);   color: var(--red);   display: block; }
-
-    /* Manual fallback */
-    .manual-section { padding: 0.75rem 1rem 1rem; border-top: 1px solid var(--gray-100); }
-    .manual-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-500); margin-bottom: 0.5rem; display: block; }
-    .manual-row { display: flex; gap: 0.5rem; }
-    .manual-input {
-      flex: 1; padding: 0.7rem 1rem; border: 1.5px solid var(--gray-200); border-radius: 10px;
-      font-size: 1rem; font-family: monospace; letter-spacing: 0.15em;
-      text-transform: uppercase; outline: none;
-    }
-    .manual-input:focus { border-color: var(--purple); }
-    .manual-btn {
-      padding: 0.7rem 1.1rem; background: var(--teal); color: white;
-      border: none; border-radius: 10px; font-family: 'Syne', sans-serif;
-      font-weight: 700; font-size: 0.85rem; cursor: pointer; white-space: nowrap;
-    }
-    .manual-btn:hover { background: var(--teal-dark); }
-
-    /* Search + table */
-    .search-input { width: 100%; padding: 0.7rem 1rem; border: 1.5px solid var(--gray-200); border-radius: 10px; font-size: 0.9rem; outline: none; margin-bottom: 1rem; font-family: 'DM Sans', sans-serif; }
-    .search-input:focus { border-color: var(--purple); }
-
-    .table-wrap { background: white; border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); overflow: hidden; }
-    table { width: 100%; border-collapse: collapse; }
-    thead { background: var(--gray-50); border-bottom: 1px solid var(--gray-200); }
-    th { text-align: left; padding: 0.85rem 1rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-500); }
-    td { padding: 0.9rem 1rem; font-size: 0.875rem; color: var(--gray-700); border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: var(--gray-50); }
-    .attendee-name { font-weight: 600; color: #111827; }
-    .attendee-id { font-family: monospace; font-size: 0.82rem; background: var(--gray-100); padding: 0.15rem 0.5rem; border-radius: 4px; color: var(--purple); letter-spacing: 0.1em; }
-    .badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.25rem 0.7rem; border-radius: 100px; font-size: 0.75rem; font-weight: 600; }
-    .badge-in { background: var(--green-light); color: var(--green); }
-    .badge-out { background: var(--gray-100); color: var(--gray-500); }
-    .btn-checkin { padding: 0.4rem 0.9rem; border: none; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
-    .btn-checkin-in { background: var(--green); color: white; }
-    .btn-checkin-out { background: var(--gray-200); color: var(--gray-700); }
-    .empty { text-align: center; padding: 3rem; color: var(--gray-500); font-size: 0.9rem; }
-
-    @media (max-width: 600px) {
-      .stats { grid-template-columns: 1fr 1fr; }
-      th:nth-child(2), td:nth-child(2) { display: none; }
+    @media(max-width:420px){
+      th:nth-child(2),td:nth-child(2){display:none;}
     }
   </style>
 </head>
 <body>
-
 <div class="topbar">
-  <div class="topbar-left">
-    <h1>Admin Dashboard</h1>
-    <p>{{ conf.name }}</p>
+  <div class="topbar-brand">
+    <div class="topbar-dot"></div>
+    <div>
+      <div class="topbar-title">Admin Dashboard</div>
+      <div class="topbar-sub">AI Impact Conference 2026</div>
+    </div>
   </div>
   <div class="topbar-right">
-    <div class="topbar-badge">ADMIN</div>
-    <a href="/admin/logout" class="logout-btn">Log Out</a>
+    {% if force_day %}<span class="chip chip-warn">⚠ TEST: {{ force_day }}</span>{% endif %}
+    {% if current_day == "day1" %}<span class="chip chip-teal">● Day 1 Active</span>
+    {% elif current_day == "day2" %}<span class="chip chip-teal">● Day 2 Active</span>
+    {% else %}<span class="chip chip-dim">No Active Day</span>{% endif %}
+    <a href="/admin/logout" class="btn-logout">Log Out</a>
   </div>
 </div>
 
-<div class="content">
-
+<div class="page">
   <div class="stats">
-    <div class="stat-card">
-      <div class="stat-num">{{ total }}</div>
-      <div class="stat-label">Registered · {{ "Day 1" if active_day == "day1" else "Day 2" }}</div>
+    <div class="stat">
+      <div class="stat-val">{{ total }}</div>
+      <div class="stat-label">Total Registered</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-num">{{ checked_in }}</div>
-      <div class="stat-label">Checked In</div>
+    <div class="stat">
+      <div class="stat-val">{{ tickets_sent }}</div>
+      <div class="stat-label">Tickets Sent</div>
+      {% if total > 0 %}<div class="stat-bar"><div class="stat-bar-fill" style="width:{{ (tickets_sent/total*100)|int }}%"></div></div>{% endif %}
     </div>
-    <div class="stat-card">
-      <div class="stat-num">{{ total - checked_in }}</div>
-      <div class="stat-label">Pending</div>
-      {% if total > 0 %}
-      <div class="progress-bar"><div class="progress-fill" style="width:{{ (checked_in / total * 100)|int }}%"></div></div>
-      <div class="progress-label">{{ (checked_in / total * 100)|int }}%</div>
-      {% endif %}
+    <div class="stat">
+      <div class="stat-val">{{ day1_count }}</div>
+      <div class="stat-label">Day 1 Check-ins</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">{{ day2_count }}</div>
+      <div class="stat-label">Day 2 Check-ins</div>
     </div>
   </div>
 
-  <div class="tabs">
-    <a href="/admin?day=day1" class="tab {{ 'active' if active_day == 'day1' }}">📅 Day 1 — Apr 8</a>
-    <a href="/admin?day=day2" class="tab {{ 'active' if active_day == 'day2' }}">📅 Day 2 — Apr 9</a>
-  </div>
-
-  <!-- Scan card -->
-  <div class="scan-card">
-    <button class="scan-trigger" id="scan-toggle-btn" onclick="toggleScanner()">
-      <span class="scan-icon">📷</span>
-      <span id="scan-btn-label">Tap to Scan QR Code</span>
+  <div class="card">
+    <button class="scan-btn" id="scan-toggle" onclick="toggleScanner()">
+      <span>📷</span><span id="scan-label">Tap to Scan QR Code</span>
     </button>
-
-    <div id="qr-reader-wrap">
-      <div id="qr-reader"></div>
-    </div>
-
-    <div id="scan-result"></div>
-
-    <div class="manual-section">
-      <span class="manual-label">Manual backup — type attendee ID</span>
+    <div id="qr-reader-wrap"><div id="qr-reader"></div></div>
+    <div id="scan-toast"></div>
+    <div class="manual-wrap">
+      <span class="manual-label">Manual — type attendee ID</span>
       <div class="manual-row">
-        <input class="manual-input" type="text" id="manual-id" placeholder="e.g. A3F9" maxlength="8" autocomplete="off" autocorrect="off" spellcheck="false" />
-        <button class="manual-btn" onclick="checkInById()">Check In</button>
+        <input class="manual-input" id="manual-id" type="text" placeholder="e.g. A3F9B2C1" maxlength="8" autocomplete="off" spellcheck="false"/>
+        <button class="manual-btn" onclick="checkInManual()">Check In</button>
       </div>
     </div>
   </div>
 
-  <input type="text" class="search-input" placeholder="🔍 Search by name or email..." id="search" oninput="filterTable()" />
-
-  <div class="table-wrap">
-    {% if attendees %}
-    <table id="attendee-table">
-      <thead>
-        <tr>
-          <th>Attendee</th>
-          <th>Email</th>
-          <th>ID</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for a in attendees %}
-        {% set checked = a.checked_in_day1 if active_day == 'day1' else a.checked_in_day2 %}
-        <tr>
-          <td class="attendee-name">{{ a.name }}</td>
-          <td>{{ a.email }}</td>
-          <td><span class="attendee-id">{{ a.id }}</span></td>
-          <td>
-            {% if checked %}
-            <span class="badge badge-in">✓ Checked In</span>
-            {% else %}
-            <span class="badge badge-out">Pending</span>
-            {% endif %}
-          </td>
-          <td>
-            <form method="POST" action="/admin/checkin/{{ a.id }}?day={{ active_day }}">
-              <button type="submit" class="btn-checkin {{ 'btn-checkin-out' if checked else 'btn-checkin-in' }}">
-                {{ "Undo" if checked else "Check In" }}
-              </button>
-            </form>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
-    <div class="empty">No attendees registered for this day yet.</div>
-    {% endif %}
+  <div class="card">
+    <div class="card-header"><div class="card-title">📤 Import Attendees via CSV</div></div>
+    <div class="card-body">
+      <div class="upload-zone" id="drop-zone" onclick="document.getElementById('csv-input').click()"
+           ondragover="event.preventDefault();this.classList.add('drag')"
+           ondragleave="this.classList.remove('drag')"
+           ondrop="handleDrop(event)">
+        <input type="file" id="csv-input" accept=".csv" onchange="uploadCSV(this.files[0])"/>
+        <div class="upload-icon">📋</div>
+        <div class="upload-text">Click to upload CSV or drag and drop</div>
+        <div class="upload-sub">Needs Name and Email columns — other columns are ignored</div>
+      </div>
+      <div id="upload-result"></div>
+    </div>
   </div>
 
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">👥 Attendees</div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" id="search" type="text" placeholder="Search name or email..." oninput="filterTable()"/>
+      </div>
+    </div>
+    <div class="table-wrap">
+      {% if attendees %}
+      <table id="attendee-table">
+        <thead><tr><th>Name</th><th>Email</th><th>ID</th><th>Ticket</th><th>Day 1</th><th>Day 2</th><th>Action</th></tr></thead>
+        <tbody>
+          {% for a in attendees %}
+          <tr id="row-{{ a.id }}">
+            <td class="name-cell">{{ a.name }}</td>
+            <td class="email-cell">{{ a.email }}</td>
+            <td><span class="id-badge">{{ a.id }}</span></td>
+            <td>
+              {% if a.ticket_sent %}<span class="status-badge badge-in">✓ Sent</span>
+              {% else %}<span class="status-badge badge-unsent">Pending</span>{% endif %}
+              <button class="resend-btn" onclick="resendTicket('{{ a.id }}','{{ a.name }}')">↺</button>
+            </td>
+            <td>{% if a.checked_in_day1 %}<span class="status-badge badge-in">✓</span>{% else %}<span style="color:var(--gray-300)">—</span>{% endif %}</td>
+            <td>{% if a.checked_in_day2 %}<span class="status-badge badge-in">✓</span>{% else %}<span style="color:var(--gray-300)">—</span>{% endif %}</td>
+            <td>
+              {% if current_day %}
+                {% set checked = a.checked_in_day1 if current_day == 'day1' else a.checked_in_day2 %}
+                <form method="POST" action="/admin/checkin/{{ a.id }}?day={{ current_day }}">
+                  <button type="submit" class="action-btn {{ 'btn-undo' if checked else 'btn-in' }}">{{ "Undo" if checked else "Check In" }}</button>
+                </form>
+              {% else %}<span style="font-size:0.75rem;color:var(--gray-400)">—</span>{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="empty-state">No attendees yet — upload a CSV to get started</div>
+      {% endif %}
+    </div>
+  </div>
 </div>
 
 <script>
-  const ACTIVE_DAY = '{{ active_day }}';
-  let html5QrCode = null;
-  let scannerRunning = false;
-  let lastScannedId = null;
-  let lastScannedTime = 0;
+const CURRENT_DAY='{{ current_day or "" }}';
+let scanner=null,scannerOn=false,lastId=null,lastTime=0;
 
-  // ── Scanner toggle ──────────────────────────────────────────────────────
-  async function toggleScanner() {
-    if (scannerRunning) {
-      await stopScanner();
-    } else {
-      await startScanner();
-    }
+async function toggleScanner(){ scannerOn ? await stopScanner() : await startScanner(); }
+
+async function startScanner(){
+  document.getElementById('qr-reader-wrap').style.display='block';
+  document.getElementById('scan-toggle').classList.add('active');
+  document.getElementById('scan-label').textContent='Stop Scanner';
+  scanner=new Html5Qrcode('qr-reader');
+  try{
+    await scanner.start({facingMode:'environment'},{fps:10,qrbox:{width:220,height:220},aspectRatio:1.0},onScan,()=>{});
+    scannerOn=true;
+  }catch(e){
+    toast('Camera unavailable — use manual entry',false);
+    document.getElementById('qr-reader-wrap').style.display='none';
+    document.getElementById('scan-toggle').classList.remove('active');
+    document.getElementById('scan-label').textContent='Tap to Scan QR Code';
   }
+}
 
-  async function startScanner() {
-    const wrap = document.getElementById('qr-reader-wrap');
-    const btn = document.getElementById('scan-toggle-btn');
-    const label = document.getElementById('scan-btn-label');
+async function stopScanner(){
+  if(scanner&&scannerOn){try{await scanner.stop();}catch(e){}scanner=null;}
+  scannerOn=false;
+  document.getElementById('qr-reader-wrap').style.display='none';
+  document.getElementById('scan-toggle').classList.remove('active');
+  document.getElementById('scan-label').textContent='Tap to Scan QR Code';
+}
 
-    wrap.style.display = 'block';
-    label.textContent = 'Stop Scanner';
-    btn.classList.add('active');
-    clearResult();
+async function onScan(text){
+  const id=text.trim().toUpperCase(),now=Date.now();
+  if(id===lastId&&now-lastTime<4000)return;
+  lastId=id;lastTime=now;
+  try{await scanner.pause(true);}catch(e){}
+  await submitCheckIn(id);
+  setTimeout(async()=>{try{if(scanner&&scannerOn)scanner.resume();}catch(e){}},3000);
+}
 
-    html5QrCode = new Html5Qrcode("qr-reader");
+function checkInManual(){
+  const id=document.getElementById('manual-id').value.trim().toUpperCase();
+  if(id) submitCheckIn(id);
+}
+document.getElementById('manual-id').addEventListener('keydown',e=>{if(e.key==='Enter')checkInManual();});
 
-    try {
-      await html5QrCode.start(
-        { facingMode: "environment" },   // rear camera
-        {
-          fps: 10,
-          qrbox: { width: 220, height: 220 },
-          aspectRatio: 1.0,
-          disableFlip: false,
-        },
-        onQrSuccess,
-        onQrError   // silent — fires every frame when no QR found
-      );
-      scannerRunning = true;
-    } catch (err) {
-      wrap.style.display = 'none';
-      label.textContent = 'Tap to Scan QR Code';
-      btn.classList.remove('active');
-      showResult('❌ Camera unavailable. Use manual ID below.', false);
-    }
-  }
+async function submitCheckIn(id){
+  if(!CURRENT_DAY){toast('No active day — set FORCE_DAY to test',false);return;}
+  const fd=new FormData();fd.append('attendee_id',id);
+  try{
+    const res=await fetch('/admin/scan',{method:'POST',body:fd});
+    const data=await res.json();
+    toast(data.message,data.success);
+    if(data.success){document.getElementById('manual-id').value='';updateRow(id,data.day);}
+  }catch(e){toast('Network error',false);}
+}
 
-  async function stopScanner() {
-    const wrap = document.getElementById('qr-reader-wrap');
-    const btn = document.getElementById('scan-toggle-btn');
-    const label = document.getElementById('scan-btn-label');
+function updateRow(id,day){
+  const row=document.getElementById('row-'+id);
+  if(!row)return;
+  const col=day==='day1'?4:5;
+  row.cells[col].innerHTML='<span class="status-badge badge-in">✓</span>';
+  row.cells[6].innerHTML='<form method="POST" action="/admin/checkin/'+id+'?day='+day+'"><button type="submit" class="action-btn btn-undo">Undo</button></form>';
+  row.style.transition='background 0.4s';row.style.background='#ecfdf5';
+  setTimeout(()=>{row.style.background='';},1800);
+}
 
-    if (html5QrCode && scannerRunning) {
-      try { await html5QrCode.stop(); } catch(e) {}
-      html5QrCode = null;
-    }
-    scannerRunning = false;
-    wrap.style.display = 'none';
-    label.textContent = 'Tap to Scan QR Code';
-    btn.classList.remove('active');
-  }
+function toast(msg,ok){
+  const el=document.getElementById('scan-toast');
+  el.textContent=msg;el.className=ok?'ok':'err';
+  if(ok)setTimeout(()=>{el.className='';el.textContent='';},4000);
+}
 
-  // ── QR decode callbacks ─────────────────────────────────────────────────
-  async function onQrSuccess(decodedText) {
-    const id = decodedText.trim().toUpperCase();
-    const now = Date.now();
+function handleDrop(e){
+  e.preventDefault();document.getElementById('drop-zone').classList.remove('drag');
+  const f=e.dataTransfer.files[0];if(f)uploadCSV(f);
+}
 
-    // Debounce: ignore same QR within 4 seconds
-    if (id === lastScannedId && now - lastScannedTime < 4000) return;
-    lastScannedId = id;
-    lastScannedTime = now;
+async function uploadCSV(file){
+  if(!file)return;
+  const result=document.getElementById('upload-result');
+  result.textContent='⏳ Uploading and sending tickets...';result.className='loading';
+  const fd=new FormData();fd.append('file',file);
+  try{
+    const res=await fetch('/admin/upload-csv',{method:'POST',body:fd});
+    const data=await res.json();
+    result.textContent=data.message;result.className=data.success?'ok':'err';
+    if(data.success)setTimeout(()=>location.reload(),2000);
+  }catch(e){result.textContent='Upload failed — try again';result.className='err';}
+}
 
-    // Pause scanner while processing
-    if (html5QrCode && scannerRunning) {
-      try { await html5QrCode.pause(true); } catch(e) {}
-    }
+async function resendTicket(id,name){
+  if(!confirm('Resend ticket to '+name+'?'))return;
+  const fd=new FormData();fd.append('attendee_id',id);
+  const res=await fetch('/admin/resend-ticket',{method:'POST',body:fd});
+  const data=await res.json();
+  alert(data.message);
+}
 
-    await submitCheckIn(id);
-
-    // Resume after 3 seconds for next person
-    setTimeout(async () => {
-      if (html5QrCode && scannerRunning) {
-        try { html5QrCode.resume(); } catch(e) {}
-      }
-    }, 3000);
-  }
-
-  function onQrError(error) {
-    // Fires constantly when no QR in frame — intentionally silent
-  }
-
-  // ── Manual ID check-in ──────────────────────────────────────────────────
-  function checkInById() {
-    const id = document.getElementById('manual-id').value.trim().toUpperCase();
-    if (!id) return;
-    submitCheckIn(id);
-  }
-
-  document.getElementById('manual-id').addEventListener('keydown', e => {
-    if (e.key === 'Enter') checkInById();
+function filterTable(){
+  const q=document.getElementById('search').value.toLowerCase();
+  document.querySelectorAll('#attendee-table tbody tr').forEach(r=>{
+    r.style.display=r.textContent.toLowerCase().includes(q)?'':'none';
   });
-
-  // ── Core check-in API call ──────────────────────────────────────────────
-  async function submitCheckIn(id) {
-    const formData = new FormData();
-    formData.append('attendee_id', id);
-    formData.append('day', ACTIVE_DAY);
-
-    try {
-      const res = await fetch('/admin/scan', { method: 'POST', body: formData });
-      const data = await res.json();
-      showResult(data.message, data.success);
-
-      if (data.success) {
-        document.getElementById('manual-id').value = '';
-        // Update the table row live without a full reload
-        updateTableRow(id, data.name);
-      }
-    } catch (err) {
-      showResult('Network error — check your connection.', false);
-    }
-  }
-
-  // ── Live table update (no reload needed) ────────────────────────────────
-  function updateTableRow(id, name) {
-    const rows = document.querySelectorAll('#attendee-table tbody tr');
-    rows.forEach(row => {
-      const idCell = row.querySelector('.attendee-id');
-      if (idCell && idCell.textContent.trim() === id) {
-        const statusCell = row.children[3];
-        const actionCell = row.children[4];
-        statusCell.innerHTML = '<span class="badge badge-in">✓ Checked In</span>';
-        actionCell.innerHTML = `
-          <form method="POST" action="/admin/checkin/${id}?day=${ACTIVE_DAY}">
-            <button type="submit" class="btn-checkin btn-checkin-out">Undo</button>
-          </form>`;
-        row.style.transition = 'background 0.4s';
-        row.style.background = '#ecfdf5';
-        setTimeout(() => row.style.background = '', 1500);
-      }
-    });
-    // Update stat numbers
-    const checkedEl = document.querySelectorAll('.stat-num')[1];
-    const pendingEl = document.querySelectorAll('.stat-num')[2];
-    if (checkedEl && pendingEl) {
-      checkedEl.textContent = parseInt(checkedEl.textContent) + 1;
-      pendingEl.textContent = Math.max(0, parseInt(pendingEl.textContent) - 1);
-    }
-  }
-
-  // ── UI helpers ──────────────────────────────────────────────────────────
-  function showResult(message, success) {
-    const el = document.getElementById('scan-result');
-    el.textContent = message;
-    el.className = success ? 'success' : 'error';
-    if (success) {
-      setTimeout(() => el.className = el.style.display = '', 4000);
-    }
-  }
-
-  function clearResult() {
-    const el = document.getElementById('scan-result');
-    el.className = '';
-    el.textContent = '';
-  }
-
-  function filterTable() {
-    const q = document.getElementById('search').value.toLowerCase();
-    document.querySelectorAll('#attendee-table tbody tr').forEach(row => {
-      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
-    });
-  }
+}
 </script>
 </body>
 </html>
