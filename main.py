@@ -4,7 +4,7 @@ load_dotenv()
 from fastapi import FastAPI, Request, Form, HTTPException, Cookie, UploadFile, File, BackgroundTasks
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse, StreamingResponse
 import uvicorn
 from database import engine, Base, SessionLocal
 from models import Attendee
@@ -71,13 +71,22 @@ def get_current_day() -> str | None:
     return None
 
 
-def generate_qr(attendee_id: str):
+def generate_qr_image(attendee_id: str) -> io.BytesIO:
+    """Generate QR code in memory and return as a BytesIO buffer."""
     qr = qrcode.QRCode(version=1, box_size=8, border=2)
     qr.add_data(attendee_id)
     qr.make(fit=True)
     img = qr.make_image(fill_color="#2D1B8E", back_color="white")
-    path = f"{QR_DIR}/{attendee_id}.png"
-    img.save(path)
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+    return buf
+
+
+@app.get("/qr/{attendee_id}.png")
+async def qr_image(attendee_id: str):
+    buf = generate_qr_image(attendee_id.upper())
+    return StreamingResponse(buf, media_type="image/png")
 
 
 def is_admin(admin_session: str = None) -> bool:
@@ -99,7 +108,7 @@ async def send_ticket_email(attendee_name: str, attendee_email: str, attendee_id
         service = build("gmail", "v1", credentials=creds)
 
         ticket_url = f"{BASE_URL}/ticket/{attendee_id}"
-        qr_url     = f"{BASE_URL}/static/qrcodes/{attendee_id}.png"
+        qr_url     = f"{BASE_URL}/qr/{attendee_id}.png"
 
         html = f"""
         <div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;">
@@ -166,7 +175,6 @@ def create_attendee_from_row(name: str, email: str, phone: str = "") -> Attendee
         db.add(attendee)
         db.commit()
         db.refresh(attendee)
-        generate_qr(attendee_id)
         return attendee
     finally:
         db.close()
@@ -209,7 +217,6 @@ async def ticket_page(request: Request, attendee_id: str):
             raise HTTPException(status_code=404, detail="Ticket not found")
         return templates.TemplateResponse(request, "ticket.html", {
             "attendee": a,
-            "qr_url": f"/static/qrcodes/{attendee_id}.png",
             "conf": CONFERENCE,
         })
     finally:

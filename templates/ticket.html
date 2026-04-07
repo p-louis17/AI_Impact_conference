@@ -190,7 +190,7 @@
     <div class="attendee-email">{{ attendee.email }}</div>
 
     <div class="qr-section">
-      <img src="{{ qr_url }}" alt="QR Code" />
+      <img src="/qr/{{ attendee.id }}.png" alt="QR Code" />
       <div class="qr-id">{{ attendee.id }}</div>
       <div class="qr-hint">Show at the door each day</div>
     </div>
