@@ -183,7 +183,6 @@
     </div>
   </div>
   <div class="topbar-right">
-    {% if force_day %}<span class="chip chip-warn">⚠ TEST: {{ force_day }}</span>{% endif %}
     {% if current_day == "day1" %}<span class="chip chip-teal">● Day 1 Active</span>
     {% elif current_day == "day2" %}<span class="chip chip-teal">● Day 2 Active</span>
     {% else %}<span class="chip chip-dim">No Active Day</span>{% endif %}
