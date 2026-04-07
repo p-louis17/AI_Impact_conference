@@ -13,12 +13,15 @@
       --teal:#00BCD4;--teal-dark:#0097a7;
       --green:#10b981;--green-bg:#ecfdf5;
       --red:#ef4444;--red-bg:#fef2f2;
+      --orange:#f59e0b;--orange-bg:#fffbeb;
       --gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;
       --gray-400:#94a3b8;--gray-600:#475569;--gray-800:#1e293b;
       --white:#ffffff;
       --radius:12px;--shadow:0 1px 3px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.04);
     }
     body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--gray-800);min-height:100vh;}
+
+    /* ── Top bar ── */
     .topbar{background:var(--purple);color:white;padding:0.875rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:sticky;top:0;z-index:100;}
     .topbar-brand{display:flex;align-items:center;gap:0.75rem;}
     .topbar-dot{width:8px;height:8px;background:var(--teal);border-radius:50%;flex-shrink:0;}
@@ -30,17 +33,31 @@
     .chip-warn{background:rgba(251,191,36,0.2);color:#d97706;border:1px solid rgba(251,191,36,0.4);}
     .chip-dim{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);border:1px solid rgba(255,255,255,0.12);}
     .btn-logout{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);color:white;padding:0.3rem 0.875rem;border-radius:100px;font-size:0.72rem;font-weight:600;cursor:pointer;text-decoration:none;}
-    .page{max-width:960px;margin:0 auto;padding:1.5rem 1rem;}
+
+    /* ── Tabs ── */
+    .tabs{background:white;border-bottom:1px solid var(--gray-200);display:flex;gap:0;padding:0 1.5rem;}
+    .tab-btn{padding:0.875rem 1.25rem;font-family:'DM Sans',sans-serif;font-size:0.875rem;font-weight:600;color:var(--gray-400);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.15s,border-color 0.15s;}
+    .tab-btn.active{color:var(--purple);border-bottom-color:var(--purple);}
+    .tab-panel{display:none;}.tab-panel.active{display:block;}
+
+    /* ── Page layout ── */
+    .page{max-width:980px;margin:0 auto;padding:1.5rem 1rem;}
+
+    /* ── Stats ── */
     .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0.875rem;margin-bottom:1.5rem;}
     .stat{background:var(--white);border-radius:var(--radius);padding:1.1rem 1.25rem;box-shadow:var(--shadow);border:1px solid var(--gray-200);}
     .stat-val{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;color:var(--purple);line-height:1;}
     .stat-label{font-size:0.75rem;color:var(--gray-400);margin-top:0.3rem;font-weight:500;}
     .stat-bar{height:4px;background:var(--gray-200);border-radius:100px;margin-top:0.6rem;overflow:hidden;}
     .stat-bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-dark));border-radius:100px;}
+
+    /* ── Cards ── */
     .card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--gray-200);margin-bottom:1.25rem;overflow:hidden;}
     .card-header{padding:1rem 1.25rem;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;}
     .card-title{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:var(--gray-800);}
     .card-body{padding:1.25rem;}
+
+    /* ── Scanner ── */
     .scan-btn{display:flex;align-items:center;justify-content:center;gap:0.6rem;width:100%;padding:1rem;background:var(--purple);color:white;border:none;font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:background 0.15s;}
     .scan-btn:hover{background:var(--purple-mid);}
     .scan-btn.active{background:var(--purple-dark);}
@@ -61,6 +78,8 @@
     .manual-input:focus{border-color:var(--purple);}
     .manual-btn{padding:0.65rem 1rem;background:var(--teal);color:white;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;white-space:nowrap;}
     .manual-btn:hover{background:var(--teal-dark);}
+
+    /* ── Upload ── */
     .upload-zone{border:2px dashed var(--gray-200);border-radius:10px;padding:1.5rem;text-align:center;cursor:pointer;transition:border-color 0.15s,background 0.15s;}
     .upload-zone:hover,.upload-zone.drag{border-color:var(--teal);background:rgba(0,188,212,0.03);}
     .upload-zone input{display:none;}
@@ -71,12 +90,26 @@
     #upload-result.ok{background:var(--green-bg);color:var(--green);display:block;}
     #upload-result.err{background:var(--red-bg);color:var(--red);display:block;}
     #upload-result.loading{background:var(--gray-100);color:var(--gray-600);display:block;}
-    .search-wrap{position:relative;width:100%;max-width:280px;}
+
+    /* ── Export buttons ── */
+    .export-row{display:flex;gap:0.5rem;flex-wrap:wrap;}
+    .export-btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;border-radius:8px;font-size:0.8rem;font-weight:600;text-decoration:none;border:1.5px solid var(--gray-200);color:var(--gray-600);background:white;cursor:pointer;transition:border-color 0.15s,color 0.15s;}
+    .export-btn:hover{border-color:var(--teal);color:var(--teal);}
+
+    /* ── Table controls ── */
+    .table-controls{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;}
+    .search-wrap{position:relative;flex:1;min-width:180px;max-width:280px;}
     .search-icon{position:absolute;left:0.875rem;top:50%;transform:translateY(-50%);color:var(--gray-400);pointer-events:none;}
     .search-input{width:100%;padding:0.65rem 0.875rem 0.65rem 2.25rem;border:1.5px solid var(--gray-200);border-radius:10px;font-size:0.875rem;outline:none;font-family:'DM Sans',sans-serif;transition:border-color 0.15s;}
     .search-input:focus{border-color:var(--purple);}
+    .controls-right{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;}
+    .page-size-select{padding:0.55rem 0.75rem;border:1.5px solid var(--gray-200);border-radius:8px;font-size:0.8rem;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;color:var(--gray-600);}
+    .toggle-delete-btn{padding:0.5rem 0.875rem;border:1.5px solid var(--gray-200);border-radius:8px;font-size:0.78rem;font-weight:600;color:var(--gray-600);background:white;cursor:pointer;transition:all 0.15s;}
+    .toggle-delete-btn.active{border-color:var(--red);color:var(--red);background:var(--red-bg);}
+
+    /* ── Table ── */
     .table-wrap{overflow-x:auto;}
-    table{width:100%;border-collapse:collapse;min-width:500px;}
+    table{width:100%;border-collapse:collapse;min-width:520px;}
     thead{background:var(--gray-50);}
     th{text-align:left;padding:0.75rem 1rem;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--gray-400);border-bottom:1px solid var(--gray-200);white-space:nowrap;}
     td{padding:0.8rem 1rem;font-size:0.85rem;border-bottom:1px solid var(--gray-100);vertical-align:middle;}
@@ -94,11 +127,44 @@
     .btn-undo{background:var(--gray-200);color:var(--gray-600);}
     .resend-btn{background:none;border:1px solid var(--gray-200);color:var(--gray-600);padding:0.25rem 0.6rem;border-radius:7px;font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:0.3rem;}
     .resend-btn:hover{border-color:var(--purple);color:var(--purple);}
+    .delete-btn{background:none;border:1px solid var(--red);color:var(--red);padding:0.25rem 0.6rem;border-radius:7px;font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:0.3rem;display:none;}
+    .delete-btn:hover{background:var(--red-bg);}
+    .delete-col{display:none;}
     .empty-state{text-align:center;padding:3rem;color:var(--gray-400);font-size:0.875rem;}
+
+    /* ── Pagination ── */
+    .pagination{display:flex;align-items:center;justify-content:space-between;padding:0.875rem 1.25rem;border-top:1px solid var(--gray-100);flex-wrap:wrap;gap:0.5rem;}
+    .page-info{font-size:0.8rem;color:var(--gray-400);}
+    .page-nav{display:flex;gap:0.3rem;}
+    .page-nav-btn{padding:0.3rem 0.65rem;border:1.5px solid var(--gray-200);border-radius:7px;font-size:0.8rem;cursor:pointer;background:white;color:var(--gray-600);font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+    .page-nav-btn:hover:not(:disabled){border-color:var(--purple);color:var(--purple);}
+    .page-nav-btn.current{background:var(--purple);color:white;border-color:var(--purple);}
+    .page-nav-btn:disabled{opacity:0.4;cursor:default;}
+
+    /* ── Deleted attendees ── */
+    .deleted-toggle{display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.82rem;color:var(--gray-400);padding:0.75rem 1.25rem;border-top:1px solid var(--gray-100);user-select:none;}
+    .deleted-toggle:hover{color:var(--gray-600);}
+    .deleted-section{display:none;border-top:1px solid var(--gray-100);}
+    .restore-btn{background:none;border:1px solid var(--green);color:var(--green);padding:0.25rem 0.6rem;border-radius:7px;font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;}
+    .restore-btn:hover{background:var(--green-bg);}
+
+    /* ── Walk-in form ── */
+    .walkin-form{display:grid;gap:1rem;}
+    .walkin-form .field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .field label{display:block;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--gray-400);margin-bottom:0.35rem;}
+    .field input{width:100%;padding:0.7rem 0.875rem;border:1.5px solid var(--gray-200);border-radius:10px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.15s;color:var(--gray-800);}
+    .field input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(45,27,142,0.07);}
+    .walkin-submit{padding:0.85rem 2rem;background:var(--purple);color:white;border:none;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;transition:background 0.15s;width:100%;}
+    .walkin-submit:hover{background:var(--purple-mid);}
+    #walkin-result{margin-top:1rem;padding:0.875rem 1rem;border-radius:10px;font-size:0.875rem;font-weight:600;display:none;}
+    #walkin-result.ok{background:var(--green-bg);color:var(--green);display:block;}
+    #walkin-result.err{background:var(--red-bg);color:var(--red);display:block;}
+    .walkin-note{font-size:0.78rem;color:var(--gray-400);text-align:center;margin-top:0.5rem;}
+
     @media(max-width:640px){
       .stats{grid-template-columns:1fr 1fr;}
       .topbar-sub{display:none;}
-      th:nth-child(3),td:nth-child(3){display:none;}
+      .walkin-form .field-row{grid-template-columns:1fr;}
     }
     @media(max-width:420px){
       th:nth-child(2),td:nth-child(2){display:none;}
@@ -106,6 +172,8 @@
   </style>
 </head>
 <body>
+
+<!-- Top bar -->
 <div class="topbar">
   <div class="topbar-brand">
     <div class="topbar-dot"></div>
@@ -123,7 +191,17 @@
   </div>
 </div>
 
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('attendees', this)">Attendees</button>
+  <button class="tab-btn" onclick="switchTab('walkins', this)">Walk-ins</button>
+</div>
+
+<!-- ═══════════════ ATTENDEES TAB ═══════════════ -->
+<div id="tab-attendees" class="tab-panel active">
 <div class="page">
+
+  <!-- Stats -->
   <div class="stats">
     <div class="stat">
       <div class="stat-val">{{ total }}</div>
@@ -144,9 +222,13 @@
     </div>
   </div>
 
+  <!-- Scanner card -->
   <div class="card">
     <button class="scan-btn" id="scan-toggle" onclick="toggleScanner()">
-      <span>📷</span><span id="scan-label">Tap to Scan QR Code</span>
+      <span>📷</span>
+      <span id="scan-label">Tap to Scan QR Code
+        {% if current_day == "day1" %} · Day 1{% elif current_day == "day2" %} · Day 2{% endif %}
+      </span>
     </button>
     <div id="qr-reader-wrap"><div id="qr-reader"></div></div>
     <div id="scan-toast"></div>
@@ -159,6 +241,7 @@
     </div>
   </div>
 
+  <!-- CSV Import -->
   <div class="card">
     <div class="card-header"><div class="card-title">📤 Import Attendees via CSV</div></div>
     <div class="card-body">
@@ -175,21 +258,48 @@
     </div>
   </div>
 
+  <!-- Attendees table -->
   <div class="card">
     <div class="card-header">
       <div class="card-title">👥 Attendees</div>
-      <div class="search-wrap">
-        <span class="search-icon">🔍</span>
-        <input class="search-input" id="search" type="text" placeholder="Search name or email..." oninput="filterTable()"/>
+      <div class="table-controls">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input class="search-input" id="search" type="text" placeholder="Search name or email..." oninput="onSearch()"/>
+        </div>
+        <div class="controls-right">
+          <div class="export-row">
+            <a class="export-btn" href="/admin/export-csv?day=day1">⬇ Day 1</a>
+            <a class="export-btn" href="/admin/export-csv?day=day2">⬇ Day 2</a>
+            <a class="export-btn" href="/admin/export-csv?day=both">⬇ Both Days</a>
+          </div>
+          <select class="page-size-select" id="page-size-select" onchange="onPageSizeChange()">
+            <option value="10" selected>10 / page</option>
+            <option value="25">25 / page</option>
+            <option value="50">50 / page</option>
+            <option value="100">100 / page</option>
+          </select>
+          <button class="toggle-delete-btn" id="delete-toggle" onclick="toggleDeleteMode()">🗑 Show Delete</button>
+        </div>
       </div>
     </div>
     <div class="table-wrap">
       {% if attendees %}
       <table id="attendee-table">
-        <thead><tr><th>Name</th><th>Email</th><th>ID</th><th>Ticket</th><th>Day 1</th><th>Day 2</th><th>Action</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>ID</th>
+            <th>Ticket</th>
+            <th>Day 1</th>
+            <th>Day 2</th>
+            <th>Action</th>
+          </tr>
+        </thead>
         <tbody>
           {% for a in attendees %}
-          <tr id="row-{{ a.id }}">
+          <tr id="row-{{ a.id }}" data-name="{{ a.name|lower }}" data-email="{{ a.email|lower }}">
             <td class="name-cell">{{ a.name }}</td>
             <td class="email-cell">{{ a.email }}</td>
             <td><span class="id-badge">{{ a.id }}</span></td>
@@ -203,126 +313,360 @@
             <td>
               {% if current_day %}
                 {% set checked = a.checked_in_day1 if current_day == 'day1' else a.checked_in_day2 %}
-                <form method="POST" action="/admin/checkin/{{ a.id }}?day={{ current_day }}">
-                  <button type="submit" class="action-btn {{ 'btn-undo' if checked else 'btn-in' }}">{{ "Undo" if checked else "Check In" }}</button>
+                {% set day_label = 'Day 1' if current_day == 'day1' else 'Day 2' %}
+                <form method="POST" action="/admin/checkin/{{ a.id }}?day={{ current_day }}" style="display:inline;">
+                  <button type="submit" class="action-btn {{ 'btn-undo' if checked else 'btn-in' }}">
+                    {{ "Undo " + day_label if checked else "Check In · " + day_label }}
+                  </button>
                 </form>
               {% else %}<span style="font-size:0.75rem;color:var(--gray-400)">—</span>{% endif %}
+              <button class="delete-btn" onclick="deleteAttendee('{{ a.id }}','{{ a.name }}')">✕ Remove</button>
             </td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
       {% else %}
-      <div class="empty-state">No attendees yet — upload a CSV to get started</div>
+      <div class="empty-state">No attendees yet — upload a CSV or add a walk-in</div>
       {% endif %}
     </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination">
+      <span class="page-info" id="page-info"></span>
+      <div class="page-nav" id="page-nav"></div>
+    </div>
+
+    <!-- Deleted attendees section -->
+    {% if deleted_attendees %}
+    <div class="deleted-toggle" onclick="toggleDeleted(this)">
+      <span id="deleted-arrow">▶</span>
+      <span>{{ deleted_attendees|length }} removed attendee{{ 's' if deleted_attendees|length != 1 }} — click to view / restore</span>
+    </div>
+    <div class="deleted-section" id="deleted-section">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>ID</th><th>Removed</th><th>Restore</th></tr></thead>
+          <tbody>
+            {% for a in deleted_attendees %}
+            <tr id="del-row-{{ a.id }}">
+              <td class="name-cell" style="opacity:0.6;">{{ a.name }}</td>
+              <td class="email-cell" style="opacity:0.6;">{{ a.email }}</td>
+              <td><span class="id-badge">{{ a.id }}</span></td>
+              <td style="font-size:0.78rem;color:var(--gray-400);">{{ a.deleted_at.strftime('%d %b %Y %H:%M') if a.deleted_at else '—' }}</td>
+              <td><button class="restore-btn" onclick="restoreAttendee('{{ a.id }}','{{ a.name }}')">↩ Restore</button></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
   </div>
+
+</div><!-- /page -->
+</div><!-- /tab-attendees -->
+
+
+<!-- ═══════════════ WALK-INS TAB ═══════════════ -->
+<div id="tab-walkins" class="tab-panel">
+<div class="page">
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🚶 Register a Walk-in Attendee</div>
+    </div>
+    <div class="card-body">
+      {% if not current_day %}
+      <div style="background:var(--orange-bg);border:1.5px solid #fcd34d;border-radius:10px;padding:1rem;color:#92400e;font-size:0.875rem;margin-bottom:1rem;">
+        ⚠ Walk-ins can only be registered on an active conference day (April 8 or 9).
+      </div>
+      {% endif %}
+
+      <form class="walkin-form" id="walkin-form" onsubmit="submitWalkin(event)">
+        <div class="field-row">
+          <div class="field">
+            <label>Full Name</label>
+            <input type="text" name="name" id="wi-name" placeholder="e.g. John Mukasa" required />
+          </div>
+          <div class="field">
+            <label>Email Address</label>
+            <input type="email" name="email" id="wi-email" placeholder="you@example.com" required />
+          </div>
+        </div>
+        <div class="field">
+          <label>Phone (optional)</label>
+          <input type="text" name="phone" id="wi-phone" placeholder="+256 7xx xxx xxx" />
+        </div>
+        <button type="submit" class="walkin-submit" {% if not current_day %}disabled{% endif %}>
+          Register &amp; Check In
+          {% if current_day == "day1" %} · Day 1{% elif current_day == "day2" %} · Day 2{% endif %}
+        </button>
+        <div class="walkin-note">The attendee will receive a ticket email and the event schedule link automatically.</div>
+      </form>
+      <div id="walkin-result"></div>
+    </div>
+  </div>
+
 </div>
+</div><!-- /tab-walkins -->
+
 
 <script>
-const CURRENT_DAY='{{ current_day or "" }}';
-let scanner=null,scannerOn=false,lastId=null,lastTime=0;
+const CURRENT_DAY = '{{ current_day or "" }}';
+let scanner = null, scannerOn = false, lastId = null, lastTime = 0;
 
-async function toggleScanner(){ scannerOn ? await stopScanner() : await startScanner(); }
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
 
-async function startScanner(){
-  document.getElementById('qr-reader-wrap').style.display='block';
-  document.getElementById('scan-toggle').classList.add('active');
-  document.getElementById('scan-label').textContent='Stop Scanner';
-  scanner=new Html5Qrcode('qr-reader');
-  try{
-    await scanner.start({facingMode:'environment'},{fps:10,qrbox:{width:220,height:220},aspectRatio:1.0},onScan,()=>{});
-    scannerOn=true;
-  }catch(e){
-    toast('Camera unavailable — use manual entry',false);
-    document.getElementById('qr-reader-wrap').style.display='none';
-    document.getElementById('scan-toggle').classList.remove('active');
-    document.getElementById('scan-label').textContent='Tap to Scan QR Code';
+// ── Pagination ────────────────────────────────────────────────────────────────
+let allRows = [], filteredRows = [], currentPage = 1, pageSize = 10;
+
+function initTable() {
+  const tbody = document.querySelector('#attendee-table tbody');
+  if (!tbody) return;
+  allRows = Array.from(tbody.querySelectorAll('tr'));
+  filteredRows = [...allRows];
+  renderPage();
+}
+
+function renderPage() {
+  const total = filteredRows.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  if (currentPage > totalPages) currentPage = totalPages;
+
+  allRows.forEach(r => r.style.display = 'none');
+  const start = (currentPage - 1) * pageSize;
+  filteredRows.slice(start, start + pageSize).forEach(r => r.style.display = '');
+
+  // Info
+  const from = total === 0 ? 0 : start + 1;
+  const to   = Math.min(start + pageSize, total);
+  document.getElementById('page-info').textContent = total === 0
+    ? 'No results' : `Showing ${from}–${to} of ${total}`;
+
+  // Buttons
+  const nav = document.getElementById('page-nav');
+  nav.innerHTML = '';
+  const addBtn = (label, page, isCurrent, disabled) => {
+    const b = document.createElement('button');
+    b.className = 'page-nav-btn' + (isCurrent ? ' current' : '');
+    b.textContent = label;
+    b.disabled = disabled;
+    if (!disabled && !isCurrent) b.onclick = () => { currentPage = page; renderPage(); };
+    nav.appendChild(b);
+  };
+  addBtn('‹', currentPage - 1, false, currentPage === 1);
+  // show up to 5 page number buttons
+  const range = 2;
+  for (let p = 1; p <= totalPages; p++) {
+    if (p === 1 || p === totalPages || Math.abs(p - currentPage) <= range) {
+      addBtn(p, p, p === currentPage, false);
+    } else if (Math.abs(p - currentPage) === range + 1) {
+      const dots = document.createElement('span');
+      dots.textContent = '…';
+      dots.style.cssText = 'padding:0.3rem 0.4rem;color:var(--gray-400);font-size:0.8rem;';
+      nav.appendChild(dots);
+    }
+  }
+  addBtn('›', currentPage + 1, false, currentPage === totalPages);
+}
+
+function onSearch() {
+  const q = document.getElementById('search').value.toLowerCase();
+  filteredRows = allRows.filter(r =>
+    r.dataset.name.includes(q) || r.dataset.email.includes(q)
+  );
+  currentPage = 1;
+  renderPage();
+}
+
+function onPageSizeChange() {
+  pageSize = parseInt(document.getElementById('page-size-select').value);
+  currentPage = 1;
+  renderPage();
+}
+
+// ── Delete mode ───────────────────────────────────────────────────────────────
+let deleteMode = false;
+function toggleDeleteMode() {
+  deleteMode = !deleteMode;
+  document.querySelectorAll('.delete-btn').forEach(b => b.style.display = deleteMode ? 'inline-block' : 'none');
+  const btn = document.getElementById('delete-toggle');
+  btn.classList.toggle('active', deleteMode);
+  btn.textContent = deleteMode ? '✕ Hide Delete' : '🗑 Show Delete';
+}
+
+async function deleteAttendee(id, name) {
+  if (!confirm(`Remove "${name}" from the list?\n\nThey can be restored later from the deleted attendees section.`)) return;
+  const res  = await fetch(`/admin/delete/${id}`, { method: 'POST' });
+  const data = await res.json();
+  if (data.success) {
+    const row = document.getElementById('row-' + id);
+    if (row) {
+      // Remove from allRows/filteredRows and re-render
+      allRows = allRows.filter(r => r !== row);
+      filteredRows = filteredRows.filter(r => r !== row);
+      row.remove();
+      renderPage();
+    }
+    alert(data.message);
+  } else {
+    alert(data.message);
   }
 }
 
-async function stopScanner(){
-  if(scanner&&scannerOn){try{await scanner.stop();}catch(e){}scanner=null;}
-  scannerOn=false;
-  document.getElementById('qr-reader-wrap').style.display='none';
+async function restoreAttendee(id, name) {
+  if (!confirm(`Restore "${name}"? They will reappear in the active attendee list.`)) return;
+  const res  = await fetch(`/admin/restore/${id}`, { method: 'POST' });
+  const data = await res.json();
+  alert(data.message);
+  if (data.success) location.reload();
+}
+
+function toggleDeleted(el) {
+  const sec = document.getElementById('deleted-section');
+  const arrow = document.getElementById('deleted-arrow');
+  const visible = sec.style.display === 'block';
+  sec.style.display = visible ? 'none' : 'block';
+  arrow.textContent = visible ? '▶' : '▼';
+}
+
+// ── Scanner ───────────────────────────────────────────────────────────────────
+async function toggleScanner() { scannerOn ? await stopScanner() : await startScanner(); }
+
+async function startScanner() {
+  document.getElementById('qr-reader-wrap').style.display = 'block';
+  document.getElementById('scan-toggle').classList.add('active');
+  document.getElementById('scan-label').textContent = 'Stop Scanner';
+  scanner = new Html5Qrcode('qr-reader');
+  try {
+    await scanner.start({ facingMode: 'environment' }, { fps: 10, qrbox: { width: 220, height: 220 }, aspectRatio: 1.0 }, onScan, () => {});
+    scannerOn = true;
+  } catch(e) {
+    toast('Camera unavailable — use manual entry', false);
+    document.getElementById('qr-reader-wrap').style.display = 'none';
+    document.getElementById('scan-toggle').classList.remove('active');
+    document.getElementById('scan-label').textContent = 'Tap to Scan QR Code';
+  }
+}
+
+async function stopScanner() {
+  if (scanner && scannerOn) { try { await scanner.stop(); } catch(e) {} scanner = null; }
+  scannerOn = false;
+  document.getElementById('qr-reader-wrap').style.display = 'none';
   document.getElementById('scan-toggle').classList.remove('active');
-  document.getElementById('scan-label').textContent='Tap to Scan QR Code';
+  document.getElementById('scan-label').textContent = 'Tap to Scan QR Code';
 }
 
-async function onScan(text){
-  const id=text.trim().toUpperCase(),now=Date.now();
-  if(id===lastId&&now-lastTime<4000)return;
-  lastId=id;lastTime=now;
-  try{await scanner.pause(true);}catch(e){}
+async function onScan(text) {
+  const id = text.trim().toUpperCase(), now = Date.now();
+  if (id === lastId && now - lastTime < 4000) return;
+  lastId = id; lastTime = now;
+  try { await scanner.pause(true); } catch(e) {}
   await submitCheckIn(id);
-  setTimeout(async()=>{try{if(scanner&&scannerOn)scanner.resume();}catch(e){}},3000);
+  setTimeout(async () => { try { if (scanner && scannerOn) scanner.resume(); } catch(e) {} }, 3000);
 }
 
-function checkInManual(){
-  const id=document.getElementById('manual-id').value.trim().toUpperCase();
-  if(id) submitCheckIn(id);
+function checkInManual() {
+  const id = document.getElementById('manual-id').value.trim().toUpperCase();
+  if (id) submitCheckIn(id);
 }
-document.getElementById('manual-id').addEventListener('keydown',e=>{if(e.key==='Enter')checkInManual();});
+document.getElementById('manual-id').addEventListener('keydown', e => { if (e.key === 'Enter') checkInManual(); });
 
-async function submitCheckIn(id){
-  if(!CURRENT_DAY){toast('No active day — set FORCE_DAY to test',false);return;}
-  const fd=new FormData();fd.append('attendee_id',id);
-  try{
-    const res=await fetch('/admin/scan',{method:'POST',body:fd});
-    const data=await res.json();
-    toast(data.message,data.success);
-    if(data.success){document.getElementById('manual-id').value='';updateRow(id,data.day);}
-  }catch(e){toast('Network error',false);}
-}
-
-function updateRow(id,day){
-  const row=document.getElementById('row-'+id);
-  if(!row)return;
-  const col=day==='day1'?4:5;
-  row.cells[col].innerHTML='<span class="status-badge badge-in">✓</span>';
-  row.cells[6].innerHTML='<form method="POST" action="/admin/checkin/'+id+'?day='+day+'"><button type="submit" class="action-btn btn-undo">Undo</button></form>';
-  row.style.transition='background 0.4s';row.style.background='#ecfdf5';
-  setTimeout(()=>{row.style.background='';},1800);
+async function submitCheckIn(id) {
+  if (!CURRENT_DAY) { toast('No active day — check-in is only available on April 8 and 9', false); return; }
+  const fd = new FormData(); fd.append('attendee_id', id);
+  try {
+    const res  = await fetch('/admin/scan', { method: 'POST', body: fd });
+    const data = await res.json();
+    toast(data.message, data.success);
+    if (data.success) { document.getElementById('manual-id').value = ''; updateRow(id, data.day); }
+  } catch(e) { toast('Network error', false); }
 }
 
-function toast(msg,ok){
-  const el=document.getElementById('scan-toast');
-  el.textContent=msg;el.className=ok?'ok':'err';
-  if(ok)setTimeout(()=>{el.className='';el.textContent='';},4000);
+function updateRow(id, day) {
+  const row = document.getElementById('row-' + id);
+  if (!row) return;
+  const col = day === 'day1' ? 4 : 5;
+  row.cells[col].innerHTML = '<span class="status-badge badge-in">✓</span>';
+  const dayLabel = day === 'day1' ? 'Day 1' : 'Day 2';
+  row.cells[6].innerHTML = `<form method="POST" action="/admin/checkin/${id}?day=${day}" style="display:inline;"><button type="submit" class="action-btn btn-undo">Undo ${dayLabel}</button></form>` +
+    (deleteMode ? `<button class="delete-btn" onclick="deleteAttendee('${id}','${row.cells[0].textContent}')" style="display:inline-block;">✕ Remove</button>` : '<button class="delete-btn" onclick="deleteAttendee(\''+id+'\',\'' + row.cells[0].textContent + '\')">✕ Remove</button>');
+  row.style.transition = 'background 0.4s'; row.style.background = '#ecfdf5';
+  setTimeout(() => { row.style.background = ''; }, 1800);
 }
 
-function handleDrop(e){
-  e.preventDefault();document.getElementById('drop-zone').classList.remove('drag');
-  const f=e.dataTransfer.files[0];if(f)uploadCSV(f);
+function toast(msg, ok) {
+  const el = document.getElementById('scan-toast');
+  el.textContent = msg; el.className = ok ? 'ok' : 'err';
+  if (ok) setTimeout(() => { el.className = ''; el.textContent = ''; }, 4000);
 }
 
-async function uploadCSV(file){
-  if(!file)return;
-  const result=document.getElementById('upload-result');
-  result.textContent='⏳ Uploading and sending tickets...';result.className='loading';
-  const fd=new FormData();fd.append('file',file);
-  try{
-    const res=await fetch('/admin/upload-csv',{method:'POST',body:fd});
-    const data=await res.json();
-    result.textContent=data.message;result.className=data.success?'ok':'err';
-    if(data.success)setTimeout(()=>location.reload(),2000);
-  }catch(e){result.textContent='Upload failed — try again';result.className='err';}
+// ── CSV import ────────────────────────────────────────────────────────────────
+function handleDrop(e) {
+  e.preventDefault(); document.getElementById('drop-zone').classList.remove('drag');
+  const f = e.dataTransfer.files[0]; if (f) uploadCSV(f);
 }
 
-async function resendTicket(id,name){
-  if(!confirm('Resend ticket to '+name+'?'))return;
-  const fd=new FormData();fd.append('attendee_id',id);
-  const res=await fetch('/admin/resend-ticket',{method:'POST',body:fd});
-  const data=await res.json();
+async function uploadCSV(file) {
+  if (!file) return;
+  const result = document.getElementById('upload-result');
+  result.textContent = '⏳ Uploading and sending tickets...'; result.className = 'loading';
+  const fd = new FormData(); fd.append('file', file);
+  try {
+    const res  = await fetch('/admin/upload-csv', { method: 'POST', body: fd });
+    const data = await res.json();
+    result.textContent = data.message; result.className = data.success ? 'ok' : 'err';
+    if (data.success) setTimeout(() => location.reload(), 2000);
+  } catch(e) { result.textContent = 'Upload failed — try again'; result.className = 'err'; }
+}
+
+// ── Resend ticket ─────────────────────────────────────────────────────────────
+async function resendTicket(id, name) {
+  if (!confirm('Resend ticket to ' + name + '?')) return;
+  const fd = new FormData(); fd.append('attendee_id', id);
+  const res  = await fetch('/admin/resend-ticket', { method: 'POST', body: fd });
+  const data = await res.json();
   alert(data.message);
 }
 
-function filterTable(){
-  const q=document.getElementById('search').value.toLowerCase();
-  document.querySelectorAll('#attendee-table tbody tr').forEach(r=>{
-    r.style.display=r.textContent.toLowerCase().includes(q)?'':'none';
-  });
+// ── Walk-in ───────────────────────────────────────────────────────────────────
+async function submitWalkin(e) {
+  e.preventDefault();
+  const result = document.getElementById('walkin-result');
+  result.style.display = 'none';
+
+  const fd = new FormData();
+  fd.append('name',  document.getElementById('wi-name').value.trim());
+  fd.append('email', document.getElementById('wi-email').value.trim());
+  fd.append('phone', document.getElementById('wi-phone').value.trim());
+
+  try {
+    const res  = await fetch('/admin/walkin', { method: 'POST', body: fd });
+    const data = await res.json();
+    result.textContent = data.message;
+    result.className   = data.success ? 'ok' : 'err';
+    result.style.display = 'block';
+    if (data.success) {
+      document.getElementById('wi-name').value  = '';
+      document.getElementById('wi-email').value = '';
+      document.getElementById('wi-phone').value = '';
+    }
+  } catch(e) {
+    result.textContent = 'Network error — please try again.';
+    result.className   = 'err';
+    result.style.display = 'block';
+  }
 }
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+initTable();
 </script>
 </body>
 </html>
