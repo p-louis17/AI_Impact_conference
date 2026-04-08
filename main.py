@@ -68,7 +68,7 @@ print(f"DEBUG — FORCE_DAY: '{FORCE_DAY}'")
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def get_current_day() -> str | None:
-    """Returns 'day1', 'day2', or None based on Uganda date or FORCE_DAY override."""
+    FORCE_DAY = os.getenv("FORCE_DAY", "")
     if FORCE_DAY in ("day1", "day2"):
         return FORCE_DAY
     today = datetime.now(UGANDA_TZ).date()
